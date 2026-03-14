@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>AI Fluent — Pravni Dokumenti</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0b0f;--bg2:#12141a;--bg3:#1a1d27;--card:#13151e;--gold:#f5a623;--white:#f2ede4;--muted:#5a6278;--green:#2ecf7a;--red:#ff6b6b;--blue:#4da8ff;--border:rgba(245,166,35,0.13)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Syne',sans-serif;line-height:1.6;font-size:15px}
+.topnav{position:sticky;top:0;z-index:100;background:rgba(10,11,15,0.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05);padding:13px 18px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;color:var(--gold)}.logo span{color:var(--white)}
+.ver{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:1px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:14px 16px;scrollbar-width:none;border-bottom:1px solid rgba(255,255,255,0.04)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:7px 14px;border-radius:50px;border:1px solid rgba(255,255,255,0.08);font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:all .2s;background:none;color:var(--muted)}
+.tab.on{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
+.sec{padding:28px 18px;display:none}.sec.on{display:block}
+.tag{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;display:block}
+h2{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:1.5px;line-height:1;margin-bottom:14px}
+h2 .g{color:var(--gold)}
+h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;margin:24px 0 10px;color:var(--gold)}
+h4{font-size:0.92rem;font-weight:700;color:var(--white);margin:18px 0 6px}
+p{color:#7a8296;font-size:0.87rem;line-height:1.8;margin-bottom:12px}
+strong{color:var(--white)}
+.card{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:18px 16px;margin-bottom:12px}
+.warn{background:rgba(255,107,107,.05);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:13px 15px;margin:12px 0;font-size:0.82rem;color:#7a8296;line-height:1.65}
+.warn strong{color:var(--red)}
+.info{background:rgba(77,168,255,.05);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:13px 15px;margin:12px 0;font-size:0.82rem;color:#7a8296;line-height:1.65}
+.info strong{color:var(--blue)}
+.gold-box{background:rgba(245,166,35,.05);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:13px 15px;margin:12px 0;font-size:0.82rem;color:#7a8296;line-height:1.65}
+.gold-box strong{color:var(--gold)}
+.legal-section{background:var(--bg2);border-radius:14px;padding:20px 18px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.05)}
+.legal-num{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.legal-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--white);margin-bottom:10px}
+.legal-text{color:#7a8296;font-size:0.84rem;line-height:1.8}
+.legal-text ul{padding-left:16px;margin:8px 0}
+.legal-text li{margin-bottom:6px;color:#7a8296}
+@media(max-width:420px){h2{font-size:1.6rem}}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="logo">AI<span>FLUENT</span></div>
+  <div class="ver">Pravni Dokumenti · v1.0</div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" onclick="show('info')">📋 Napomene</button>
+  <button class="tab"    onclick="show('uslovi')">📜 Uslovi korišćenja</button>
+  <button class="tab"    onclick="show('privatnost')">🔒 Privatnost</button>
+  <button class="tab"    onclick="show('kolacici')">🍪 Kolačići</button>
+</div>
+
+<!-- INFO -->
+<div id="sec-info" class="sec on">
+  <span class="tag">// Pre nego što koristiš ove dokumente</span>
+  <h2>PRAVNI <span class="g">DOKUMENTI</span></h2>
+  <p>Ovi dokumenti su pripremljeni kao polazna osnova za AI Fluent platformu. Pre objavljivanja preporučujemo konsultaciju sa pravnikom koji poznaje e-commerce i GDPR regulativu u Srbiji.</p>
+
+  <div class="warn"><strong>Važno:</strong> Ovi dokumenti nisu pravni savet. Autor nije pravnik. Pre nego što počneš primati plaćanja i korisničke podatke, preporuči se provera od strane licenciranog pravnika. Cena konsultacije u Srbiji: €50–150.</div>
+
+  <h3>Šta trebaš promeniti pre objave</h3>
+  <div class="card">
+    <table>
+      <tr><th>Placeholder</th><th>Zameni sa</th></tr>
+      <tr><td><strong>[DATUM]</strong></td><td>Datum kada objavljuješ dokumenta</td></tr>
+      <tr><td><strong>[EMAIL]</strong></td><td>podrska@aifluent.rs (ili tvoj email)</td></tr>
+      <tr><td><strong>[ADRESA]</strong></td><td>Tvoja registrovana poslovna adresa</td></tr>
+      <tr><td><strong>[PIB/MB]</strong></td><td>PIB i matični broj firme (ako si registrovan/a)</td></tr>
+      <tr><td><strong>[GRAD]</strong></td><td>Grad u kom posluje firma</td></tr>
+    </table>
+  </div>
+
+  <h3>Gde se objavljuju</h3>
+  <div class="card">
+    <table>
+      <tr><th>Dokument</th><th>Gde linkuješ</th></tr>
+      <tr><td><strong>Uslovi korišćenja</strong></td><td>Footer sajta + checkbox pri registraciji i kupovini</td></tr>
+      <tr><td><strong>Politika privatnosti</strong></td><td>Footer sajta + Mailchimp forma + Stripe checkout</td></tr>
+      <tr><td><strong>Politika kolačića</strong></td><td>Cookie banner koji se pojavi pri prvoj poseti</td></tr>
+    </table>
+  </div>
+
+  <div class="info"><strong>Za Stripe:</strong> Stripe zahteva da imaš javno dostupne Uslove korišćenja i Politiku privatnosti pre nego što aktiviraš live plaćanja. Bez njih, nalog ostaje u test modu.</div>
+  <div class="info"><strong>Za Mailchimp:</strong> GDPR zahteva explicit consent za email marketing. Dodaj checkbox "Prihvatam da primam edukativne emailove" pri kupovini — već je ugrađen u Mailchimp forme.</div>
+</div>
+
+<!-- USLOVI KORISCENJA -->
+<div id="sec-uslovi" class="sec">
+  <span class="tag">// Objavi na: aifluent.rs/uslovi</span>
+  <h2>USLOVI <span class="g">KORIŠĆENJA</span></h2>
+  <p style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted)">Poslednje ažuriranje: [DATUM] · Verzija 1.0</p>
+
+  <div class="legal-section">
+    <div class="legal-num">Član 1</div>
+    <div class="legal-title">Prihvatanje uslova</div>
+    <div class="legal-text">
+      <p>Korišćenjem platforme AI Fluent (aifluent.rs) i kupovinom kurseva prihvatate ove Uslove korišćenja u celosti. Ukoliko se ne slažete sa uslovima, molimo vas da ne koristite platformu.</p>
+      <p>Platforma AI Fluent je u vlasništvu i pod upravljanjem [NAZIV FIRME ILI IME I PREZIME PREDUZETNIKA], [ADRESA], [GRAD], Srbija (PIB: [PIB], MB: [MB]).</p>
+      <p>Za sva pitanja možete nas kontaktirati na: [EMAIL]</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Član 2</div>
+    <div class="legal-title">Opis usluge</div>
+    <div class="legal-text">
+      <p>AI Fluent je online obrazovna platforma koja nudi kurseve iz oblasti veštačke inteligencije (AI) na srpskom jeziku. Platforma pruža:</p>
+      <ul>
+        <li>Video lekcije dostupne online putem web aplikacije</li>
+        <li>Kvizove za proveru znanja</li>
+        <li>Sertifikate o završetku kursa</li>
+        <li>Pristup zajednici studenata</li>
+        <li>Prateće materijale (PDF, šablone i slično)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Član 3</div>
+    <div class="legal-title">Registracija i korisnički nalog</div>
+    <div class="legal-text">
+      <p>Za kupovinu kursa potrebno je uneti ime, prezime i email adresu. Korisnik je odgovoran za tačnost unetih podataka i čuvanje pristupnih podataka.</p>
+      <p>AI Fluent zadržava pravo da deaktivira nalog koji krši ove Uslove korišćenja, bez prethodne najave i bez prava na povraćaj sredstava.</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Član 4</div>
+    <div class="legal-title">Kupovina i plaćanje</div>
+    <div class="legal-text">
+      <p>Sve cene na platformi su izražene u evrima (EUR) i uključuju PDV (ako je primenjivo). Plaćanje se vrši karticom (Visa, Mastercard, American Express) putem Stripe platforme.</p>
+      <p>Kupovinom kursa korisnik stiče <strong>doživotni pristup</strong> sadržaju tog kursa, uključujući sva buduća besplatna ažuriranja, za ličnu, nekomercijalni upotrebu.</p>
+      <p>AI Fluent ne čuva podatke o platnim karticama — sve transakcije se obrađuju putem Stripe-a, koji poseduje PCI DSS sertifikaciju.</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Član 5</div>
+    <div class="legal-title">Politika povraćaja sredstava</div>
+    <div class="legal-text">
+      <p>AI Fluent ne nudi automatski povraćaj sredstava jer je reč o digitalnom sadržaju koji postaje dostupan odmah po kupovini.</p>
+      <p>Izuzetno, razmatramo zahteve za povraćaj u sledećim slučajevima:</p>
+      <ul>
+        <li>Tehnička greška koja je onemogućila pristup kursu, a nije rešena u roku od 72 sata</li>
+        <li>Dupla naplata iste porudžbine</li>
+      </ul>
+      <p>Zahtev za povraćaj šaljete na [EMAIL] u roku od 7 dana od datuma kupovine, sa brojem porudžbine.</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Član 6</div>
+    <div class="legal-title">Intelektualna svojina</div>
+    <div class="legal-text">
+      <p>Sav sadržaj na platformi (videi, tekstovi, slike, kursni materijali, sertifikati) je vlasništvo AI Fluent i zaštićen je autorskim pravima.</p>
+      <p>Kupovinom kursa korisnik dobija pravo ličnog korišćenja sadržaja. Zabranjeno je:</p>
+      <ul>
+        <li>Kopiranje, snimanje ili redistribuiranje video lekcija</li>
+        <li>Preprodaja sadržaja kursa trećim licima</li>
+        <li>Korišćenje AI Fluent sadržaja u komercijalne svrhe bez pisanog odobrenja</li>
+        <li>Deljenje pristupnih podataka sa osobama koje nisu kupile kurs</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Član 7</div>
+    <div class="legal-title">Zajednica i pravila ponašanja</div>
+    <div class="legal-text">
+      <p>Korisnici AI Fluent zajednice obavezuju se da neće objavljivati sadržaj koji:</p>
+      <ul>
+        <li>Promoviše konkurentske usluge ili platforme</li>
+        <li>Sadrži spam, reklame ili promotivne linkove</li>
+        <li>Je uvredljiv, diskriminatoran ili nasilnog karaktera</li>
+        <li>Krši autorska prava trećih lica</li>
+      </ul>
+      <p>Kršenje pravila zajednice rezultuje privremenom ili trajnom zabranom pristupa zajednici, bez prava na povraćaj sredstava.</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Član 8</div>
+    <div class="legal-title">Affiliate i partner program</div>
+    <div class="legal-text">
+      <p>AI Fluent nudi partnerski program koji omogućava korisnicima da zarade proviziju preporukom kurseva. Provizija iznosi 30% od neto cene kursa po uspešnoj prodaji.</p>
+      <p>Isplata provizija vrši se mesečno za prethodni mesec, po dostizanju minimalnog praga od €20. AI Fluent zadržava pravo izmene uslova programa uz najavu od 30 dana.</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Član 9</div>
+    <div class="legal-title">Ograničenje odgovornosti</div>
+    <div class="legal-text">
+      <p>Kursevi AI Fluent su edukativni po prirodi. AI Fluent ne garantuje:</p>
+      <ul>
+        <li>Određene finansijske rezultate primenom naučenog</li>
+        <li>Zaposlenje ili unapređenje nakon završetka kursa</li>
+        <li>Specifičan nivo zarade od primene AI alata</li>
+      </ul>
+      <p>Rezultati zavise od individualnog truda, iskustva i tržišnih uslova. Primeri uspeha studenata su ilustrativni i nisu tipični za svakog korisnika.</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Član 10</div>
+    <div class="legal-title">Izmene uslova i merodavno pravo</div>
+    <div class="legal-text">
+      <p>AI Fluent zadržava pravo izmene ovih Uslova korišćenja. O značajnim izmenama korisnici će biti obavešteni emailom najmanje 14 dana unapred. Nastavak korišćenja platforme nakon izmena smatra se prihvatanjem novih uslova.</p>
+      <p>Na ove Uslove primenjuje se pravo Republike Srbije. Svi sporovi rešavaju se pred nadležnim sudom u [GRAD], Srbija.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PRIVATNOST -->
+<div id="sec-privatnost" class="sec">
+  <span class="tag">// Objavi na: aifluent.rs/privatnost</span>
+  <h2>POLITIKA <span class="g">PRIVATNOSTI</span></h2>
+  <p style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted)">Poslednje ažuriranje: [DATUM] · Verzija 1.0 · Usklađeno sa GDPR i ZZPL</p>
+
+  <div class="legal-section">
+    <div class="legal-num">1. Rukovalac podataka</div>
+    <div class="legal-title">Ko je odgovoran za vaše podatke</div>
+    <div class="legal-text">
+      <p>Rukovalac ličnih podataka je: <strong>[NAZIV FIRME ILI IME I PREZIME]</strong>, [ADRESA], [GRAD], Srbija.</p>
+      <p>Kontakt za pitanja o privatnosti: [EMAIL]</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">2. Podaci koje prikupljamo</div>
+    <div class="legal-title">Koje informacije čuvamo</div>
+    <div class="legal-text">
+      <p><strong>Podaci koje direktno unosite:</strong></p>
+      <ul>
+        <li>Ime i prezime</li>
+        <li>Email adresa</li>
+        <li>Zemlja (automatski putem Stripe-a)</li>
+      </ul>
+      <p><strong>Podaci koje automatski prikupljamo:</strong></p>
+      <ul>
+        <li>IP adresa (anonimizovana)</li>
+        <li>Tip uređaja i browser</li>
+        <li>Stranice koje ste posetili i vreme provedeno na njima</li>
+        <li>Lekcije koje ste pogledali i napredak u kursu</li>
+      </ul>
+      <p><strong>Podatke koje NE prikupljamo:</strong></p>
+      <ul>
+        <li>Brojevi platnih kartica (obrađuje ih isključivo Stripe)</li>
+        <li>Lozinke u čitljivom obliku</li>
+        <li>Biometrijski ili osetljivi lični podaci</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">3. Svrha obrade podataka</div>
+    <div class="legal-title">Zašto koristimo vaše podatke</div>
+    <div class="legal-text">
+      <ul>
+        <li><strong>Isporuka usluge</strong> — slanje pristupa kursu, sertifikata, materijala</li>
+        <li><strong>Email komunikacija</strong> — sekvenca dobrodošlice i edukativni emailovi (uz vaš pristanak)</li>
+        <li><strong>Podrška</strong> — odgovaranje na upite i rešavanje tehničkih problema</li>
+        <li><strong>Analitika</strong> — poboljšanje sadržaja kursa na osnovu anonimnih podataka</li>
+        <li><strong>Pravne obaveze</strong> — čuvanje računovodstvenih podataka prema zakonu</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">4. Deljenje podataka sa trećim stranama</div>
+    <div class="legal-title">Ko još ima pristup vašim podacima</div>
+    <div class="legal-text">
+      <p>Vaše podatke delimo isključivo sa sledećim servisima, koji su neophodni za rad platforme:</p>
+      <ul>
+        <li><strong>Stripe</strong> — obrada plaćanja (stripe.com)</li>
+        <li><strong>Mailchimp</strong> — email marketing (mailchimp.com)</li>
+        <li><strong>Vercel/hosting provajder</strong> — hosting aplikacije</li>
+        <li><strong>Google Analytics</strong> — anonimna analitika poseta</li>
+      </ul>
+      <p>Ne prodajemo, ne iznajmljujemo i ne delimo vaše podatke sa marketinškim agencijama ili trećim stranama u komercijalne svrhe.</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">5. Vaša prava (GDPR)</div>
+    <div class="legal-title">Šta možete tražiti od nas</div>
+    <div class="legal-text">
+      <p>U skladu sa GDPR regulativom i Zakonom o zaštiti podataka o ličnosti RS, imate pravo da:</p>
+      <ul>
+        <li><strong>Pristupite</strong> podacima koje čuvamo o vama</li>
+        <li><strong>Ispravite</strong> netačne podatke</li>
+        <li><strong>Izbrišete</strong> podatke (pravo na zaborav) — osim kada postoji zakonska obaveza čuvanja</li>
+        <li><strong>Prenesete</strong> podatke drugom provajderu</li>
+        <li><strong>Prigovorite</strong> obradi u određene svrhe</li>
+        <li><strong>Otkažete</strong> pristanak za email marketing u svakom trenutku (link u svakom emailu)</li>
+      </ul>
+      <p>Zahteve šaljite na: [EMAIL]. Odgovaramo u roku od 30 dana.</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">6. Čuvanje podataka</div>
+    <div class="legal-title">Koliko dugo čuvamo podatke</div>
+    <div class="legal-text">
+      <ul>
+        <li><strong>Podaci o kupovini</strong> — 5 godina (zakonska obaveza računovodstva)</li>
+        <li><strong>Email lista</strong> — dok ne otkažete pretplatu ili ne zatražite brisanje</li>
+        <li><strong>Podaci o napretku u kursu</strong> — dok je nalog aktivan</li>
+        <li><strong>Analitički podaci</strong> — 26 meseci (Google Analytics standard)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- KOLACICI -->
+<div id="sec-kolacici" class="sec">
+  <span class="tag">// Objavi na: aifluent.rs/kolacici</span>
+  <h2>POLITIKA <span class="g">KOLAČIĆA</span></h2>
+  <p style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted)">Poslednje ažuriranje: [DATUM]</p>
+
+  <p>AI Fluent koristi kolačiće (cookies) i slične tehnologije za funkcionisanje platforme i analizu poseta. Ova politika objašnjava koje kolačiće koristimo i zašto.</p>
+
+  <div class="legal-section">
+    <div class="legal-num">Neophodne kolačiće</div>
+    <div class="legal-title">Bez kojih platforma ne radi</div>
+    <div class="legal-text">
+      <table style="width:100%;font-size:0.78rem">
+        <tr><th>Kolačić</th><th>Svrha</th><th>Trajanje</th></tr>
+        <tr><td><strong>session_id</strong></td><td>Pamti da si ulogovan/a</td><td>Do zatvaranja browsera</td></tr>
+        <tr><td><strong>cart_token</strong></td><td>Čuva sadržaj korpe</td><td>7 dana</td></tr>
+        <tr><td><strong>csrf_token</strong></td><td>Sigurnost formi</td><td>Sesija</td></tr>
+      </table>
+      <p style="margin-top:8px">Ove kolačiće ne možete isključiti — bez njih platforma ne funkcioniše ispravno.</p>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Analitički kolačići</div>
+    <div class="legal-title">Za poboljšanje platforme (uz vaš pristanak)</div>
+    <div class="legal-text">
+      <table style="width:100%;font-size:0.78rem">
+        <tr><th>Servis</th><th>Svrha</th><th>Trajanje</th></tr>
+        <tr><td><strong>Google Analytics</strong></td><td>Broj poseta, koje stranice, odakle dolaze korisnici. Anonimizovano.</td><td>26 meseci</td></tr>
+        <tr><td><strong>Hotjar</strong> (opciono)</td><td>Analiza ponašanja na stranici (heatmaps)</td><td>365 dana</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <div class="legal-num">Upravljanje kolačićima</div>
+    <div class="legal-title">Kako možete kontrolisati kolačiće</div>
+    <div class="legal-text">
+      <p>Pri prvoj poseti sajta prikazujemo baner gde možete prihvatiti ili odbiti neobavezne kolačiće. Svoju odluku možete promeniti u svakom trenutku klikom na "Podešavanja kolačića" u footer-u sajta.</p>
+      <p>Možete i ručno izbrisati kolačiće putem podešavanja vašeg browser-a (Chrome, Firefox, Safari, Edge — sve imaju tu opciju u Privacy/Security sekciji).</p>
+    </div>
+  </div>
+
+  <div class="gold-box"><strong>Napomena za implementaciju:</strong> Instalirati ConsentManager ili Cookiebot plugin za automatski cookie banner koji je GDPR compliant. Besplatne verzije postoje. Bez ovoga, tehnički nisi usklađen sa zakonom čak i ako imaš ovu politiku.</div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('sec-'+id).classList.add('on');
+  event.target.classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
