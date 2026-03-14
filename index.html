@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0a0b0f" />
+  <title>AI Fluent — AI na srpskom</title>
+  <meta name="description" content="Nauči da koristiš AI za vikend. Na srpskom, bez tehničkog znanja." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0b0f; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+
+// -- THEME -----------------------------------------------------------------
+const T = {
+  bg: "#0a0b0f",
+  bg2: "#12141a",
+  bg3: "#1a1d27",
+  card: "#13151e",
+  gold: "#f5a623",
+  goldSoft: "#f5a62322",
+  white: "#f2ede4",
+  muted: "#5a6278",
+  border: "rgba(245,166,35,0.12)",
+  green: "#2ecf7a",
+  greenSoft: "#2ecf7a18",
+  red: "#ff6b6b",
+  blue: "#4da8ff",
+  purple: "#a78bfa",
+};
+
+const F = {
+  display: "'Bebas Neue', sans-serif",
+  body: "'Syne', sans-serif",
+  mono: "'DM Mono', monospace",
+};
+
+// -- DATA -----------------------------------------------------------------
+
+// KEY: language non-AI people understand
+const RELATABLE_HOOKS = [
+  { icon: "📱", hook: "Kao Siri, ali 100× pametnije", sub: "Zamoli ga bilo šta — uradi za sekunde" },
+  { icon: "🤫", hook: "Kao pametan prijatelj koji zna sve", sub: "Uvek dostupan, nikad te ne sudi" },
+  { icon: "⏰", hook: "3 sata posla → 10 minuta", sub: "Mejlovi, prezentacije, tekstovi" },
+  { icon: "💰", hook: "Kao privatni sekretar", sub: "Samo bez plate i slobodnih dana" },
+];
+
+const PAIN_POINTS = [
+  { icon: "✍️", title: "Pišeš mejlove po sat vremena?", fix: "AI ih napiše za tebe za 30 sekundi" },
+  { icon: "📊", title: "Praviš prezentacije satima?", fix: "Reci šta hoćeš — on napravi sadržaj" },
+  { icon: "📖", title: "Nemaš pojma odakle da počneš?", fix: "Upitaj ga kao što pitaš Google" },
+  { icon: "😓", title: "Posao te iscrpljuje?", fix: "Prepusti dosadne zadatke asistentu" },
+  { icon: "📝", title: "Treba ti CV ili propratno pismo?", fix: "Gotovo za 2 minuta, profesionalno" },
+  { icon: "🎯", title: "Planiraš odmor ili događaj?", fix: "On planira sve — ti samo uživaš" },
+];
+
+const COURSES = [
+  {
+    id: 1,
+    emoji: "🌱",
+    title: "AI Početnik",
+    tagline: "Nikad nisi koristio — idealno za tebe",
+    description: "Naučićeš da koristiš pametnog asistenta kao što koristiš Google. Bez ikakvog tehničkog znanja.",
+    color: T.green,
+    price: 49,
+    oldPrice: 89,
+    lessons: 24,
+    duration: "2–3 dana",
+    whatYouGet: [
+      "Kako 'razgovaraš' sa AI asistentom",
+      "Pisanje mejlova, poruka i tekstova",
+      "Planiranje, ideje i istraživanje",
+      "Pravljenje CV-a i poslovnih dokumenata",
+      "Ušteda 2+ sata dnevno od prvog dana",
+    ],
+    relatable: "Kao naučiti da koristiš Google — samo moćnije",
+    modules: [
+      { title: "Šta je zapravo AI? (Bez komplikacija)", lessons: ["AI nije robot — šta je onda?", "Google vs AI — koja je razlika?", "Tvoj prvi razgovor sa AI — odmah na telefonu"], dur: "35min" },
+      { title: "Kako da pitaš da dobiješ dobar odgovor", lessons: ["Zašto AI ponekad daje loš odgovor", "Trik br.1: Reci mu ko si i šta ti treba", "Kad nisi zadovoljan odgovorom — šta sada?"], dur: "40min" },
+      { title: "AI za poslovnu komunikaciju", lessons: ["Mejlovi za 60 sekundi — šefovima, klijentima, kolegama", "AI odgovara na teške mejlove umesto tebe", "Izveštaji i zapisnici — AI čita i rezimira", "Prezentacije — AI pravi sadržaj, ti samo praviš slajdove"], dur: "55min" },
+      { title: "AI za traženje posla i karijeru", lessons: ["CV koji se ističe — AI ga piše i prilagođava", "Propratno pismo koje se čita — ne kopira", "Priprema za intervju — AI igra anketara"], dur: "42min" },
+      { title: "AI u privatnom životu", lessons: ["Planiranje putovanja — od ideje do rasporeda za sat vremena", "Recepti, shopping lista i planiranje obroka", "AI kao savetnik — zdravlje, pravo, finansije"], dur: "38min" },
+      { title: "AI za učenje i istraživanje", lessons: ["Naučiti nešto novo 10× brže", "Istraživanje teme — 10 puta brže nego Google", "Prevođenje i komunikacija na stranom jeziku"], dur: "40min" },
+      { title: "AI alati koje trebaš znati", lessons: ["ChatGPT, Claude, Gemini — koji je za šta?", "Aplikacije koje koriste AI a nisi znao/la", "Bezbednost i privatnost — šta ne treba da šalješ AI-u"], dur: "38min" },
+      { title: "Tvoj AI rutinski sistem", lessons: ["Pravi svoju AI rutinu za radni dan", "Šta dalje — kako nastaviti da rasteš sa AI"], dur: "28min" },
+    ]
+  },
+  {
+    id: 2,
+    emoji: "⚡",
+    title: "AI Napredni",
+    tagline: "Znaš osnove — sad zaradi i uštedi više",
+    description: "Automatizuj posao, koristi AI za biznis i napravi AI da radi za tebe dok ti spavaš.",
+    color: T.gold,
+    price: 149,
+    oldPrice: 249,
+    duration: "1 nedelja",
+    lessons: 32,
+    badge: "NAJPOPULARNIJI",
+    whatYouGet: [
+      "Automatizacija ponavljajućih zadataka",
+      "AI alati za slike, video i zvuk",
+      "AI za Instagram, TikTok i marketing",
+      "Automatski mejlovi i odgovori",
+      "Ušteda 15+ sati nedeljno",
+    ],
+    relatable: "Kao imati 3 zaposlena — samo besplatno",
+    modules: [
+      { title: "Napredni razgovori sa AI", lessons: ["Kako dobiti tačno ono što hoćeš", "Daj mu 'ulogu' — postaje ekspert", "Višestruki zadaci odjednom"], dur: "1h" },
+      { title: "AI za slike i video", lessons: ["Generisanje slika iz opisa", "AI za YouTube i TikTok sadržaj", "Pravljenje logoa bez dizajnera"], dur: "1h 30min" },
+      { title: "AI za biznis i marketing", lessons: ["AI za Instagram objave", "Automatski odgovori na mejlove", "AI za online prodavnicu"], dur: "2h" },
+      { title: "Automatizacija", lessons: ["AI koji radi bez tebe", "Automatski podsetnici i zadaci", "Spoji aplikacije — radi samo"], dur: "1h 30min" },
+    ]
+  },
+  {
+    id: 3,
+    emoji: "🚀",
+    title: "AI Ekspert",
+    tagline: "Počni da zarađuješ od AI znanja",
+    description: "Pokreni AI uslugu, nudi konsultacije firmama ili pravi AI produkte. Ovde je pravi novac.",
+    color: T.red,
+    price: 349,
+    oldPrice: 549,
+    duration: "3-4 nedelje",
+    lessons: 28,
+    badge: "EKSKLUZIVNO",
+    whatYouGet: [
+      "Pokretanje AI usluge ili agencije",
+      "Pronalaženje i naplata klijenata",
+      "AI proizvodi koji zarađuju 24/7",
+      "Sertifikat AI Fluent Eksperta",
+      "Privatna zajednica + 6 meseci podrške",
+    ],
+    relatable: "Kao otvoriti biznis — samo 10× brže i jeftinije",
+    modules: [
+      { title: "AI kao posao — model i mogućnosti", lessons: ["5 realnih načina zarađivanja sa AI", "Ko plaća za AI usluge i zašto", "Odaberi svoju nišu", "Realna vremenska crta do prvih para"], dur: "54min" },
+      { title: "Pronalaženje i pridobijanje klijenata", lessons: ["Gde su tvoji prvi klijenti", "Tvoja AI usluga u jednoj rečenici", "Besplatna demonstracija koja zatvara prodaju", "Cenovnik i paketi — naplati vrednost"], dur: "54min" },
+      { title: "Isporuka AI usluge profesionalno", lessons: ["Onboarding klijenta — od ugovora do rezultata", "AI audit klijentovog biznisa", "Reporting koji pokazuje vrednost", "Teški klijenti — kada reći ne"], dur: "52min" },
+      { title: "Skaliranje — od freelancera do agencije", lessons: ["Kada je pravo vreme za skaliranje", "Outsourcing — delegiraj, zadrži profit", "Paketizacija usluge", "Partnerstva koja donose klijente"], dur: "50min" },
+      { title: "Pasivni prihod od AI znanja", lessons: ["Affiliate od AI alata koje ionako koristiš", "Digitalni proizvodi — PDF, šabloni, prompt paketi", "Napravi sopstveni mini-kurs za 2 nedelje", "Kombinovani prihod — mapa ka €3000/mes"], dur: "50min" },
+      { title: "Personal branding i vidljivost", lessons: ["LinkedIn profil AI stručnjaka koji privlači klijente", "Content koji gradi autoritet bez svakodnevnog pisanja", "Govori i webinari — besplatan marketing", "Newsletter koji gradi publiku i prodaje pasivno"], dur: "48min" },
+      { title: "Masterclass i finalni ispit", lessons: ["Live Q&A sa mentorom — grupni poziv", "Finalni projekat — pripremi uslugu za prvog klijenta", "Expert sertifikat i ulaz u Partner direktorijum", "Doživotni VIP — šta znači i šta dobijaš"], dur: "46min" },
+    ]
+  },
+];
+
+const STORIES = [
+  { name: "Jelena, 34", job: "Administrativni radnik", avatar: "J", color: "#f5a623", before: "Pisala sam izveštaje svaki petak po 3 sata. Mrznulo mi je da gledam kompjuter.", after: "Sada AI napravi 90% izveštaja. Petkom idem kući ranije.", course: "AI Početnik" },
+  { name: "Marko, 28", job: "Preduzetnik", avatar: "M", color: "#2ecf7a", before: "Instagram sam ažurirao jednom nedeljno jer mi je trebalo sat da izmislim šta da napišem.", after: "AI piše tekst, ja samo dodam sliku. 5 minuta umesto sata.", course: "AI Napredni" },
+  { name: "Sanja, 41", job: "Prodajni menadžer", avatar: "S", color: "#a78bfa", before: "Godinama sam slala iste mejlove klijentima, samo menjala ime. Beše mi dosadno.", after: "AI personalizuje svaki mejl. Konverzija mi je porasla 40%.", course: "AI Napredni" },
+  { name: "Dejan, 52", job: "Vlasnik malog biznisa", avatar: "D", color: "#ff6b6b", before: "Plašio sam se AI-a. Mislио sam da je to za mlade i za ljude koji vole kompjutere.", after: "Za 2 dana sam naučio da koristim. Sad je kao WhatsApp — ne mogu bez.", course: "AI Početnik" },
+];
+
+// Story po kursu za CourseCard/LearnScreen
+const COURSE_STORY = {
+  1: STORIES[0], // Jelena — AI Početnik
+  2: STORIES[1], // Marko — AI Napredni
+  3: STORIES[2], // Sanja — AI Napredni (najbliža Ekspertu po sadržaju)
+};
+
+const COURSE_GIFTS = {
+  1: [
+    { id: "cert",    icon: "🎓", title: "Tvoj lični sertifikat", subtitle: "Odmah preuzmi i podeli na LinkedIn", color: T.gold,   delay: 0,   reveal: "Čestitamo! Sertifikat AI Fluent Početnika je spreman sa tvojim imenom. Podeli ga na LinkedIn i pokaži svetu da si korak ispred." },
+    { id: "pdf",     icon: "📋", title: "Tajni Cheat Sheet PDF", subtitle: "50 gotovih promptova za svaki dan",   color: T.green,  delay: 300, reveal: "50 copy-paste promptova koje možeš koristiti odmah: mejlovi, prezentacije, CV, planiranje, odgovori na kritike... Sve na srpskom." },
+    { id: "discord", icon: "💬", title: "Pristup privatnoj grupi", subtitle: "Zajednica AI Fluent studenata",      color: T.blue,   delay: 600, reveal: "Ulaziš u privatni Telegram chat sa 400+ studenata. Dele trikove, pomažu jedni drugima i dobijaju ekskluzivne AI novosti svake nedelje." },
+    { id: "coupon",  icon: "🎁", title: "30% popust na PRO kurs", subtitle: "Važi 7 dana — iskoristi dok možeš",  color: T.purple, delay: 900, reveal: "Kod: STARTER30 — uštedi €44 na PRO kursu. Važi samo 7 dana od danas. Mnogi studenti idu na PRO odmah jer se isplati." },
+  ],
+  2: [
+    { id: "cert",    icon: "🎓", title: "PRO Sertifikat",          subtitle: "Verifikovan AI profesionalac",       color: T.gold,   delay: 0,   reveal: "Sertifikat AI Fluent PRO sa QR kodom verifikacije. Firme ga mogu skenirati i potvrditi da si stvarno položio/la kurs i kviz." },
+    { id: "templates",icon: "⚡", title: "100 AI Workflow Šablona", subtitle: "Automacije koje odmah pokreneš",   color: T.green,  delay: 300, reveal: "100 gotovih workflow šablona za Make.com i Zapier. Preuzmi, poveži nalog i automatizacija radi za 30 minuta. Vrednost: €150." },
+    { id: "qa",      icon: "🎙️", title: "Grupni Q&A poziv",        subtitle: "Mesečni live sa Expert mentorima",  color: T.blue,   delay: 600, reveal: "Ulaziš na mesečni grupni Zoom poziv sa Expert mentorima. Pitaš šta god hoćeš, vidimo konkretne primere iz prakse, rešavamo pitanja grupe." },
+    { id: "coupon",  icon: "🚀", title: "40% popust na Expert kurs",subtitle: "Važi 7 dana",                      color: T.purple, delay: 900, reveal: "Kod: PRO40 — uštedi €140 na Expert kursu. Ako planiraš da zarađuješ od AI, ovo je sledeći korak. Mnogi PRO studenti prelaze odmah." },
+  ],
+  3: [
+    { id: "cert",    icon: "🏆", title: "Expert Sertifikat",        subtitle: "Verifikovan AI ekspert — globalno", color: T.gold,   delay: 0,   reveal: "Premium sertifikat sa hologramom i globalnom verifikacijom. Uključen je u Partner direktorijum AI Fluent — firme te mogu pronaći." },
+    { id: "toolkit", icon: "🛠️", title: "AI Biznis Toolkit",        subtitle: "Sve što trebaš za prvu agenciju",   color: T.green,  delay: 300, reveal: "Kompletni starter kit za AI agenciju: ugovori, cenovnici, proposal šabloni, onboarding dokumenti, invoice template. Vrednost: €300+." },
+    { id: "partner", icon: "💎", title: "AI Fluent Partner Program", subtitle: "30% provizije za svaku preporuku", color: T.blue,   delay: 600, reveal: "Postaj zvanični AI Fluent partner. Zarađuješ 30% od svake kupovine kursa koju doneseš. 10 prodaja Starter kursa = €147 passivnog prihoda." },
+    { id: "vip",     icon: "👑", title: "Doživotni VIP Status",      subtitle: "Svi budući kursevi besplatno",      color: "#ff6fdf",delay: 900, reveal: "Svaki novi AI Fluent kurs koji objavimo — tvoj je besplatno, zauvek. AI se menja brzo i ti si uvek prvi/a sa pristupom novom materijalu." },
+  ],
+};
+
+const FAQS = [
+  { q: "Da li mi treba neko znanje?", a: "Apsolutno ne. Ako znaš da koristiš WhatsApp ili Google, znaš dovoljno. Kurs počinje od samog nule." },
+  { q: "Mogu li koristiti na telefonu?", a: "Da! Sve lekcije su optimizovane za telefon. Možeš učiti u autobusu, u pauzi, gde god hoćeš." },
+  { q: "Koliko vremena treba?", a: "Starter kurs možeš završiti za vikend. Lekcije traju 10-20 minuta, gledaš kada ti odgovara." },
+  { q: "Šta ako mi se ne svidi?", a: "Nudimo 30 dana garanciju povraćaja novca — bez pitanja. Ako završiš kurs a ne budeš zadovoljan/na, pišeš nam na podrska@aifluent.rs i vraćamo novac." },
+  { q: "Da li treba da platim AI alate posebno?", a: "Sve AI alate koje učiš imaju besplatnu verziju. Nema skrivenih troškova." },
+  { q: "Hoće li AI oduzeti moj posao?", a: "Neće — ali hoće ga osoba koja zna AI. Kurs te stavlja na pravu stranu." },
+];
+
+// -- ENGAGEMENT DATA -------------------------------------------------------
+
+const DAILY_TIPS = [
+  { day: 0, icon: "✍️", title: "Mejl za 15 sekundi", tip: "Napiši u ChatGPT: 'Ti si profesionalan poslovni asistent. Napiši ljubazan mejl kojim tražim produžetak roka za projekat do petka. Ton: profesionalan ali topao.' — dobićeš savršen mejl odmah.", tag: "Posao" },
+  { day: 1, icon: "🧠", title: "AI koji zna tvoj posao", tip: "Na početku svakog razgovora reci AI-u ko si: 'Radim kao [posao] u [industrija]. Svaki moj zadatak treba biti prilagođen tome.' Sada pamti tvoj kontekst ceo razgovor.", tag: "Trik" },
+  { day: 2, icon: "📊", title: "Prezentacija za 3 minute", tip: "Kopiraj bilo koji tekst ili izveštaj i napiši: 'Pretvori ovo u 8 kratkih slajdova sa naslovom, 3 tačke po slajdu i zaključkom. Format: naslov, bullet points.' Gotova prezentacija.", tag: "Produktivnost" },
+  { day: 3, icon: "💡", title: "Ideje na zahtev", tip: "Kad te nema inspiracije za post, mejl ili projekat: 'Daj mi 10 kreativnih ideja za [tema]. Svaka ideja treba biti drugačija i neočekivana.' Uvek neka iznenadi.", tag: "Kreativa" },
+  { day: 4, icon: "🔍", title: "Sumiranje svega", tip: "Imaš dugačak članak, izveštaj ili PDF? 'Sumiraj ovo u 5 rečenica. Isticni najvažniju informaciju i akcioni korak.' Čitaš 20 stranica za 30 sekundi.", tag: "Ušteda vremena" },
+  { day: 5, icon: "🎯", title: "AI pregovarač", tip: "Pre bilo kog pregovora (plata, cena, ugovor): 'Ja sam [pozicija], pregovaram o [tema]. Predloži 5 argumenata koje mogu koristiti i kako da odgovorim na odbijanje.' Uvek spreman.", tag: "Karijera" },
+  { day: 6, icon: "📱", title: "Objava za Instagram za 1 min", tip: "Fotografisao/la si nešto zanimljivo? 'Napiši Instagram caption za ovu temu: [opis]. Ton: opušteno i autentično, 3 varijante, svaka sa emojiem i 5 hashtagova.' Biraš koji ti se više sviđa.", tag: "Društvene mreže" },
+];
+
+
+
+// -- QUIZ DATA -------------------------------------------------------------
+const COURSE_QUIZZES = {
+  1: [
+    { q: "Koja je glavna razlika između Google pretrage i AI asistenta?",
+      options: ["Google je brži i tačniji", "AI razume kontekst i daje direktan odgovor", "AI pretražuje internet u realnom vremenu", "Nema suštinske razlike"],
+      correct: 1 },
+    { q: "Koji je najefikasniji način da poboljšaš AI odgovor?",
+      options: ["Pitati opšto pitanje bez detalja", "Koristiti samo kratke rečenice", "Dati mu konkretnu ulogu i kontekst", "Uvek pisati na engleskom"],
+      correct: 2 },
+    { q: "Šta NIKADA ne smeš slati AI asistentu?",
+      options: ["Tekst mejla za pisanje", "Temu za prezentaciju", "Broj kreditne kartice i lozinke", "Tekst na stranom jeziku"],
+      correct: 2 },
+    { q: "Za koliko vremena možeš napraviti profesionalan CV uz AI?",
+      options: ["3–4 sata", "1 sat", "Pola dana", "2–3 minuta"],
+      correct: 3 },
+    { q: "Koji prompt daje BOLJI rezultat?",
+      options: ["\"Napiši mejl\"", "\"NAPIŠI MEJL MOLIM TE\"", "\"Ti si HR menadžer. Napiši formalan mejl primljenom kandidatu.\"", "\"Kako se piše mejl?\""],
+      correct: 2 },
+  ],
+  2: [
+    { q: "Šta je 'chain prompting' tehnika?",
+      options: ["Slanje iste poruke više puta", "Kopiranje odgovora iz više izvora", "Rešavanje zadatka kroz niz uzastopnih koraka", "Korišćenje više AI alata odjednom"],
+      correct: 2 },
+    { q: "Koji alat koristimo za vizuelnu automatizaciju bez koda?",
+      options: ["ChatGPT", "Canva", "CapCut", "Make.com"],
+      correct: 3 },
+    { q: "Koliko vremena oduzima batch produkcija mesec dana sadržaja?",
+      options: ["40 sati", "10 sati", "4 sata", "1 sat"],
+      correct: 2 },
+    { q: "Koja kombinacija daje najbolji AI odgovor za poslovni zadatak?",
+      options: ["Samo opis zadatka", "Pitanje na engleskom", "Sto reči opisa", "Uloga eksperta + zadatak + primer (few-shot)"],
+      correct: 3 },
+    { q: "Šta CapCut AI radi automatski po upload-u videa?",
+      options: ["Samo smanjuje veličinu fajla", "Pretvara video u tekst", "Objavljuje na sve mreže", "Dodaje titlove, uklanja pauze i predlaže muziku"],
+      correct: 3 },
+  ],
+  3: [
+    { q: "Koji je najefikasniji prvi korak za pronalaženje klijenata?",
+      options: ["Skupo oglašavanje na Google-u", "Masovni e-mail kampanje", "Besplatna 30-min AI audit sesija sa konkretnim primerom", "Praviti web stranicu mesecima"],
+      correct: 2 },
+    { q: "Koliko prosečan AI freelancer naplaćuje mesečni retainer kod MSP?",
+      options: ["€50–100", "€5000+", "€300–600", "Samo projektno, bez retainera"],
+      correct: 2 },
+    { q: "Zašto je paketizacija bolja od naplate po satu?",
+      options: ["Skuplja je za klijenta", "Lakše je fakturisati", "Traje kraće", "Ima veći percipirani value i predvidiv prihod za obe strane"],
+      correct: 3 },
+    { q: "Kada je pravo vreme da skalaš od freelancera ka agenciji?",
+      options: ["Od prvog dana", "Tek posle 2 godine", "Nikad — bolje ostati freelancer", "Kada imaš 3+ stalna klijenta i pun kapacitet"],
+      correct: 3 },
+    { q: "Šta novi student dobija odmah po položenom Expert kvizu?",
+      options: ["Samo PDF potvrdu", "Ulaz u javni direktorijum partnera i sertifikat sa QR verifikacijom", "Pristup Discord grupi bez sertifikata", "Popust na sledeći kurs"],
+      correct: 1 },
+  ],
+};
+
+const COMMUNITY_POSTS = [
+  { id: 1, name: "Ana T.", avatar: "A", color: "#ff6b6b", time: "2h", course: "AI Počet.", likes: 34, text: "Danas sam u 10 minuta napisala predlog za klijenta koji bi mi inače trajao 2h. Nisam mogla da verujem. 🤯", img: false },
+  { id: 2, name: "Marko J.", avatar: "M", color: "#2ecf7a", time: "5h", course: "AI Napr.", likes: 67, text: "AI mi je napravio plan socijalnih mreža za ceo mesec za 8 minuta. Detalji, hashtagovi, teme — sve. Ovo je neozbiljno koliko pomaže.", img: false },
+  { id: 3, name: "Jelena K.", avatar: "J", color: "#a78bfa", time: "7h", course: "AI Počet.", likes: 29, text: "Pitanje za zajednicu: koristite li AI za prevođenje ili samo za srpski? Meni je super za mejlove na engleskom klijentima! 💬", img: false },
+  { id: 4, name: "Nikola Đ.", avatar: "N", color: "#4da8ff", time: "11h", course: "AI Eksp.", likes: 112, text: "Za 3 meseca od Expert kursa: pokrenuo AI agenciju, imam 4 klijenta, zarađujem više nego na starom poslu. Svi koji pitaju — da, vredi. 🚀", img: false },
+];
+
+
+
+// -- HELPERS --------------------------------------------------------------
+
+const btn = (extra = {}) => ({
+  border: "none", cursor: "pointer", fontFamily: F.body,
+  fontWeight: 800, letterSpacing: "0.5px", transition: "all 0.18s",
+  WebkitTapHighlightColor: "transparent",
+  ...extra,
+});
+
+function Pill({ children, color = T.gold, size = "sm" }) {
+  return (
+    <span style={{
+      background: color + "22", color, border: `1px solid ${color}44`,
+      padding: size === "sm" ? "3px 10px" : "5px 14px",
+      borderRadius: 100, fontFamily: F.mono,
+      fontSize: size === "sm" ? "0.62rem" : "0.7rem",
+      fontWeight: 700, letterSpacing: "0.8px", textTransform: "uppercase",
+      whiteSpace: "nowrap",
+    }}>{children}</span>
+  );
+}
+
+function StarRow({ n = 5 }) {
+  return <span style={{ color: T.gold, fontSize: "0.85rem", letterSpacing: 2 }}>{"★".repeat(n)}</span>;
+}
+
+function Avatar({ name, color, size = 40 }) {
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: "50%",
+      background: `linear-gradient(135deg, ${color}, ${color}88)`,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontWeight: 800, fontSize: size * 0.38, color: "#000",
+      flexShrink: 0, fontFamily: F.body,
+    }}>{name[0]}</div>
+  );
+}
+
+
+
+// -- STREAK BANNER ---------------------------------------------------------
+function StreakBanner({ streak, onOpen }) {
+  const fire = streak >= 7 ? "🔥" : streak >= 3 ? "⚡" : "✨";
+  const color = streak >= 7 ? T.red : streak >= 3 ? T.gold : T.green;
+  return (
+    <div onClick={onOpen} style={{
+      margin: "12px 16px 0",
+      background: `linear-gradient(135deg, ${color}18, ${color}08)`,
+      border: `1px solid ${color}44`, borderRadius: 14,
+      padding: "12px 16px", display: "flex", alignItems: "center", gap: 12,
+      cursor: "pointer",
+    }}>
+      <div style={{ fontSize: "1.8rem", lineHeight: 1 }}>{fire}</div>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontWeight: 800, fontSize: "0.9rem", color }}>Niz od {streak} {streak === 1 ? "dan" : streak < 5 ? "dana" : "dana"}!</div>
+        <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: T.muted, marginTop: 2 }}>
+          {streak < 3 ? "Nastavi svaki dan — dobićeš bonus!" : streak < 7 ? "Odlično! Još " + (7 - streak) + " dana do nagrade 🎁" : "Legendarni niz — nastavi!"}
+        </div>
+      </div>
+      <div style={{ display: "flex", gap: 3 }}>
+        {[1,2,3,4,5,6,7].map(d => (
+          <div key={d} style={{ width: 8, height: 8, borderRadius: "50%", background: d <= streak ? color : T.muted + "33", transition: "all 0.3s" }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// -- DAILY TIP CARD --------------------------------------------------------
+function DailyTipCard({ tip, saved, onSave, onShare }) {
+  const [expanded, setExpanded] = useState(false);
+  const now = new Date();
+  const hoursLeft = 23 - now.getHours();
+  const urgent = hoursLeft < 6;
+
+  return (
+    <div style={{ margin: "12px 16px 0", borderRadius: 18, overflow: "hidden", border: `1px solid ${urgent ? T.red + "55" : T.border}` }}>
+      {/* Header */}
+      <div style={{ background: `linear-gradient(135deg, #1a1205, ${T.bg3})`, padding: "14px 16px 12px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <div style={{ background: T.goldSoft, border: `1px solid ${T.border}`, borderRadius: 8, padding: "3px 8px", fontFamily: F.mono, fontSize: "0.58rem", color: T.gold, letterSpacing: 1 }}>
+              TRIK DANA
+            </div>
+            <Pill color={urgent ? T.red : T.green} size="sm">
+              ⏰ Ističe za {hoursLeft}h
+            </Pill>
+          </div>
+
+        </div>
+        <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+          <div style={{ fontSize: "1.8rem", flexShrink: 0 }}>{tip.icon}</div>
+          <div>
+            <div style={{ fontFamily: F.display, fontSize: "1.2rem", color: T.gold, lineHeight: 1, marginBottom: 4 }}>{tip.title}</div>
+            <Pill color={T.blue} size="sm">{tip.tag}</Pill>
+          </div>
+        </div>
+      </div>
+
+      {/* Tip content */}
+      <div style={{ background: T.card, padding: "14px 16px" }}>
+        <p style={{ color: "#9ca3af", fontSize: "0.83rem", lineHeight: 1.65, margin: 0 }}>
+          {expanded ? tip.tip : tip.tip.slice(0, 90) + "..."}
+        </p>
+        <button onClick={() => setExpanded(!expanded)} style={{ ...btn(), background: "none", color: T.gold, fontSize: "0.75rem", marginTop: 6, fontFamily: F.body, padding: "4px 0" }}>
+          {expanded ? "Sakrij ▲" : "Pročitaj ceo trik ▼"}
+        </button>
+
+        {/* Action row */}
+        <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+          <button onClick={onSave} style={{ ...btn(), flex: 1, padding: "10px 0", borderRadius: 10, background: saved ? T.greenSoft : "rgba(255,255,255,0.04)", border: `1px solid ${saved ? T.green + "55" : "rgba(255,255,255,0.08)"}`, color: saved ? T.green : T.muted, fontSize: "0.78rem", fontFamily: F.body, gap: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {saved ? "✓ Sačuvano" : "🔖 Sačuvaj"}
+          </button>
+          <button onClick={onShare} style={{ ...btn(), flex: 1, padding: "10px 0", borderRadius: 10, background: "rgba(77,168,255,0.08)", border: `1px solid ${T.blue}33`, color: T.blue, fontSize: "0.78rem", fontFamily: F.body, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+            📲 Podeli
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -- QUIZ SCREEN -----------------------------------------------------------
+function QuizScreen({ course, onPass, onFail }) {
+  const questions = COURSE_QUIZZES[course?.id] || COURSE_QUIZZES[1];
+  const PASS_SCORE = 4; // 4/5 needed
+  const [step, setStep]       = useState("intro");
+  const [current, setCurrent] = useState(0);
+  const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+  const [selected, setSelected] = useState(null);
+  const [revealed, setRevealed] = useState(false);
+
+  const q = questions[current];
+  const score = answers.filter((a, i) => a === questions[i].correct).length;
+  const passed = score >= PASS_SCORE;
+
+  function choose(idx) {
+    if (revealed) return;
+    setSelected(idx);
+    setRevealed(true);
+    const updated = [...answers];
+    updated[current] = idx;
+    setAnswers(updated);
+  }
+
+  function next() {
+    if (current < questions.length - 1) {
+      setCurrent(c => c + 1);
+      setSelected(null);
+      setRevealed(false);
+    } else {
+      setStep("result");
+    }
+  }
+
+  function retry() {
+    setCurrent(0);
+    setAnswers(Array(questions.length).fill(null));
+    setSelected(null);
+    setRevealed(false);
+    setStep("intro");
+    onFail();
+  }
+
+  // -- INTRO --
+  if (step === "intro") return (
+    <div style={{ minHeight: "100vh", background: T.bg, display: "flex", flexDirection: "column", padding: "60px 20px 40px" }}>
+      <div style={{ textAlign: "center", marginBottom: 32 }}>
+        <div style={{ fontSize: "3.5rem", marginBottom: 12 }}>📝</div>
+        <div style={{ fontFamily: F.display, fontSize: "2rem", color: T.white, lineHeight: 1.1, marginBottom: 8 }}>
+          ZAVRŠNI <span style={{ color: course?.color || T.gold }}>KVIZ</span>
+        </div>
+        <div style={{ fontFamily: F.mono, fontSize: "0.65rem", color: T.muted, letterSpacing: 2, textTransform: "uppercase" }}>
+          {course?.title}
+        </div>
+      </div>
+
+      <div style={{ background: T.card, borderRadius: 18, padding: "22px 20px", marginBottom: 16 }}>
+        <div style={{ fontFamily: F.mono, fontSize: "0.6rem", color: T.gold, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 14 }}>Pravila kviza</div>
+        {[
+          ["📋", `${questions.length} pitanja iz gradiva kursa`],
+          ["✅", `Potrebno ${PASS_SCORE}/${questions.length} tačnih odgovora`],
+          ["🎓", "Položen kviz → sertifikat i pokloni"],
+          ["🔄", "Pao kviz → ponavljaš program i polaže ponovo"],
+        ].map(([ic, tx]) => (
+          <div key={tx} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 10 }}>
+            <span style={{ fontSize: "1.1rem", flexShrink: 0 }}>{ic}</span>
+            <span style={{ fontSize: "0.84rem", color: "#9ca3af", lineHeight: 1.4 }}>{tx}</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ background: `${T.gold}10`, border: `1px solid ${T.border}`, borderRadius: 14, padding: "14px 16px", marginBottom: 28 }}>
+        <div style={{ fontSize: "0.82rem", color: "#9ca3af", lineHeight: 1.65 }}>
+          💡 <strong style={{ color: T.gold }}>Savet:</strong> Sve odgovore smo obradili u lekcijama. Ako nisi siguran/na, ponovi modul koji ti je bio najteži.
+        </div>
+      </div>
+
+      <button onClick={() => setStep("quiz")} style={{ ...btn(), background: course?.color || T.gold, color: "#000", padding: 18, borderRadius: 16, fontSize: "1rem", fontFamily: F.body }}>
+        Kreni sa kvizom →
+      </button>
+    </div>
+  );
+
+  // -- RESULT --
+  if (step === "result") return (
+    <div style={{ minHeight: "100vh", background: T.bg, padding: "60px 20px 40px" }}>
+      <div style={{ textAlign: "center", marginBottom: 28 }}>
+        <div style={{ fontSize: "4rem", marginBottom: 10 }}>{passed ? "🎉" : "📚"}</div>
+        <div style={{ fontFamily: F.display, fontSize: "2.2rem", color: passed ? T.green : T.red, lineHeight: 1, marginBottom: 6 }}>
+          {passed ? "POLOŽIO/LA SI!" : "NIJE PROŠLO"}
+        </div>
+        <div style={{ fontFamily: F.display, fontSize: "1.1rem", color: T.white, marginBottom: 4 }}>
+          {score}/{questions.length} tačnih odgovora
+        </div>
+        <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.muted }}>
+          {passed ? `Bravo! Savladao/la si ${course?.title}.` : `Potrebno ${PASS_SCORE} — ponoviti gradivo.`}
+        </div>
+      </div>
+
+      {/* Score bar */}
+      <div style={{ background: T.card, borderRadius: 14, padding: "18px 16px", marginBottom: 16 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <span style={{ fontFamily: F.mono, fontSize: "0.6rem", color: T.muted, textTransform: "uppercase", letterSpacing: 1 }}>Rezultat</span>
+          <span style={{ fontFamily: F.display, fontSize: "1.4rem", color: passed ? T.green : T.red }}>{Math.round(score/questions.length*100)}%</span>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 6, height: 8, overflow: "hidden" }}>
+          <div style={{ height: "100%", borderRadius: 6, background: passed ? T.green : T.red, width: `${score/questions.length*100}%`, transition: "width 1s ease" }} />
+        </div>
+      </div>
+
+      {/* Per-question review */}
+      <div style={{ background: T.card, borderRadius: 14, overflow: "hidden", marginBottom: 20 }}>
+        <div style={{ padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)", fontFamily: F.mono, fontSize: "0.58rem", color: T.muted, letterSpacing: 1, textTransform: "uppercase" }}>Pregled odgovora</div>
+        {questions.map((qq, i) => {
+          const isCorrect = answers[i] === qq.correct;
+          return (
+            <div key={i} style={{ padding: "12px 16px", borderBottom: i < questions.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none", display: "flex", gap: 10, alignItems: "flex-start" }}>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: isCorrect ? T.green : T.red, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.7rem", color: "#000", flexShrink: 0, fontWeight: 800 }}>
+                {isCorrect ? "✓" : "✗"}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: "0.78rem", color: T.white, lineHeight: 1.4, marginBottom: 3 }}>{qq.q}</div>
+                {!isCorrect && (
+                  <div style={{ fontSize: "0.72rem", color: T.green, lineHeight: 1.4 }}>
+                    ✓ Tačno: {qq.options[qq.correct]}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {passed ? (
+        <button onClick={onPass} style={{ ...btn(), background: T.green, color: "#000", padding: 18, borderRadius: 16, fontSize: "1rem", fontFamily: F.body, width: "100%" }}>
+          🎁 Preuzmi poklone →
+        </button>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ background: `${T.red}10`, border: `1px solid ${T.red}33`, borderRadius: 14, padding: "16px", marginBottom: 4 }}>
+            <div style={{ fontWeight: 700, fontSize: "0.88rem", color: T.red, marginBottom: 6 }}>Potrebno ponavljanje</div>
+            <div style={{ fontSize: "0.8rem", color: "#9ca3af", lineHeight: 1.6 }}>
+              Savladaš li gradivo temeljno, kviz ćeš sledeći put lako proći. Preporučujemo da ponovo prođeš module gde si pogrešio/la.
+            </div>
+          </div>
+          <button onClick={retry} style={{ ...btn(), background: course?.color || T.gold, color: "#000", padding: 16, borderRadius: 14, fontSize: "0.95rem", fontFamily: F.body }}>
+            🔄 Ponovi program i pokušaj ponovo
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
+  // -- QUESTION --
+  const progress = (current / questions.length) * 100;
+  return (
+    <div style={{ minHeight: "100vh", background: T.bg, padding: "52px 20px 40px" }}>
+      {/* Progress */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <div style={{ fontFamily: F.mono, fontSize: "0.6rem", color: T.muted }}>
+            Pitanje {current + 1} od {questions.length}
+          </div>
+          <div style={{ fontFamily: F.mono, fontSize: "0.6rem", color: course?.color || T.gold }}>
+            {current}/{questions.length} završeno
+          </div>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 6, height: 5, overflow: "hidden" }}>
+          <div style={{ height: "100%", borderRadius: 6, background: course?.color || T.gold, width: `${progress}%`, transition: "width 0.4s ease" }} />
+        </div>
+      </div>
+
+      {/* Question */}
+      <div style={{ background: T.card, borderRadius: 18, padding: "22px 18px", marginBottom: 16 }}>
+        <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: course?.color || T.gold, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 12 }}>
+          {course?.title} · Kviz
+        </div>
+        <div style={{ fontSize: "1rem", fontWeight: 700, color: T.white, lineHeight: 1.55 }}>{q.q}</div>
+      </div>
+
+      {/* Options */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+        {q.options.map((opt, i) => {
+          const isCorrect = i === q.correct;
+          const isChosen  = i === selected;
+          let bg    = "rgba(255,255,255,0.04)";
+          let border = "rgba(255,255,255,0.08)";
+          let color  = T.white;
+          if (revealed) {
+            if (isCorrect)            { bg = `${T.green}18`; border = T.green + "66"; color = T.green; }
+            else if (isChosen)        { bg = `${T.red}12`;   border = T.red   + "55"; color = T.red;   }
+          } else if (isChosen) {
+            bg = `${course?.color || T.gold}15`; border = (course?.color || T.gold) + "55"; color = course?.color || T.gold;
+          }
+          return (
+            <button key={i} onClick={() => choose(i)} disabled={revealed} style={{
+              ...btn(), background: bg, border: `1px solid ${border}`, borderRadius: 14,
+              padding: "16px 18px", textAlign: "left", color, fontSize: "0.88rem", lineHeight: 1.45,
+              display: "flex", gap: 12, alignItems: "center", transition: "all 0.25s",
+            }}>
+              <div style={{ width: 28, height: 28, borderRadius: "50%", background: revealed && isCorrect ? T.green : revealed && isChosen ? T.red : "rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F.mono, fontSize: "0.7rem", flexShrink: 0, transition: "all 0.25s", color: revealed ? "#000" : T.muted, fontWeight: 800 }}>
+                {revealed && isCorrect ? "✓" : revealed && isChosen ? "✗" : ["A","B","C","D"][i]}
+              </div>
+              <span style={{ flex: 1 }}>{opt}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Feedback + Next */}
+      {revealed && (
+        <div style={{ animation: "fadeSlideIn 0.3s ease" }}>
+          <div style={{ background: selected === q.correct ? `${T.green}10` : `${T.red}10`, border: `1px solid ${selected === q.correct ? T.green : T.red}33`, borderRadius: 12, padding: "14px 16px", marginBottom: 14 }}>
+            <div style={{ fontWeight: 700, fontSize: "0.85rem", color: selected === q.correct ? T.green : T.red, marginBottom: 4 }}>
+              {selected === q.correct ? "✓ Tačno!" : "✗ Netačno"}
+            </div>
+            {selected !== q.correct && (
+              <div style={{ fontSize: "0.8rem", color: "#9ca3af", lineHeight: 1.5 }}>
+                Tačan odgovor: <strong style={{ color: T.green }}>{q.options[q.correct]}</strong>
+              </div>
+            )}
+          </div>
+          <button onClick={next} style={{ ...btn(), background: course?.color || T.gold, color: "#000", padding: 16, borderRadius: 14, fontSize: "0.95rem", fontFamily: F.body, width: "100%" }}>
+            {current < questions.length - 1 ? "Sledeće pitanje →" : "Vidi rezultat →"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// -- ZAJEDNICA SCREEN (Community Tab) -------------------------------------
+// -- FILTER ENGINE ---------------------------------------------------------
+const FILTER_RULES = {
+  competitors: ["udemy", "coursera", "skillshare", "masterclass", "linkedin learning", "domestika", "edx", "pluralsight"],
+  negative:    ["prevara", "lažno", "beskorisno", "gluposti", "gubljenje", "bezveze", "ne vredi", "loše", "katastrofa", "scam", "rip off", "smeće", "laž", "prevarili", "žalim", "lose", "uzasno", "užasno", "krađa"],
+  spam:        ["klikni ovde", "zarada od kuće", "brza zarada", "zaradite", "telegram kanal", "whatsapp grupa", "pridruži se mom", "popust kod", "promo kod", "t.me/", "bit.ly", "tinyurl", "http://", "www."],
+  toxic:       ["glupan", "idiot", "budala", "tupan", "debil", "smešno što", "sramota", "glupost", "smece", "smeće"],
+};
+
+
+function filterPost(text){
+  const lower = text.toLowerCase();
+  // Competitor mentions — dozvoli ako su u pozitivnom kontekstu ("bolje od", "za razliku od", "pre sam koristio")
+  const positiveContext = ["bolje", "za razliku", "pre sam", "mnogo bolje", "preferiram", "prebacio", "preporučujem umesto"];
+  const hasPositiveContext = positiveContext.some(w => lower.includes(w));
+  if (!hasPositiveContext) {
+    for (const w of FILTER_RULES.competitors)
+      if (lower.includes(w)) return { ok: false, severity: "block", category: "Konkurencija",
+        reason: `Spominjanje "${w}" nije dozvoljeno.`, suggestion: "Fokusiraj se na AI Fluent sadržaj i svoja iskustva." };
+  }
+  for (const w of FILTER_RULES.negative)
+    if (lower.includes(w)) return { ok: false, severity: "block", category: "Negativan sadržaj",
+      reason: "Komentar krši pravila zajednice.", suggestion: "Ako imaš problem sa platformom, kontaktiraj podršku direktno." };
+  for (const w of FILTER_RULES.toxic)
+    if (lower.includes(w)) return { ok: false, severity: "block", category: "Neprikladan ton",
+      reason: "Ovakav ton nije dozvoljen u zajednici.", suggestion: "Zajednica je prostor za podršku — preformuliši ljubaznije." };
+  for (const w of FILTER_RULES.spam)
+    if (lower.includes(w)) return { ok: false, severity: "warn", category: "Spam / Promocija",
+      reason: "Tekst izgleda kao promocija ili spam.", suggestion: "Podeli iskustvo sa AI alatom umesto spoljnih linkova." };
+  if (text.trim().length < 10) return { ok: false, severity: "warn", category: "Prekratko",
+    reason: "Komentar je prekratak.", suggestion: "Dodaj malo više detalja.", };
+  return { ok: true, reason: "", category: "", suggestion: "", severity: "ok" };
+}
+
+// -- BAN SCREEN ------------------------------------------------------------
+function BannedScreen({ violations, onClose }) {
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)", zIndex: 400, display: "flex", alignItems: "flex-end" }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: "100%", background: T.bg2, borderRadius: "20px 20px 0 0", padding: "28px 20px 44px" }}>
+        <div style={{ width: 36, height: 4, background: T.muted + "33", borderRadius: 2, margin: "0 auto 20px" }} />
+
+        {/* Icon */}
+        <div style={{ textAlign: "center", marginBottom: 16 }}>
+          <div style={{ width: 72, height: 72, borderRadius: "50%", background: "rgba(255,107,107,0.12)", border: `2px solid ${T.red}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2.2rem", margin: "0 auto 12px" }}>
+            🚫
+          </div>
+          <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: T.red, letterSpacing: 1 }}>PRIVREMENA BLOKADA</div>
+          <div style={{ fontFamily: F.mono, fontSize: "0.6rem", color: T.muted, letterSpacing: 2, marginTop: 4, textTransform: "uppercase" }}>Komentarisanje blokirano 7 dana</div>
+        </div>
+
+        {/* Reason */}
+        <div style={{ background: "rgba(255,107,107,0.07)", border: `1px solid ${T.red}33`, borderRadius: 14, padding: "16px", marginBottom: 16 }}>
+          <div style={{ fontFamily: F.mono, fontSize: "0.6rem", color: T.red, letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>Zabeleženi prekršaji</div>
+          {violations.map((v, i) => (
+            <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", paddingBottom: 8, marginBottom: 8, borderBottom: i < violations.length - 1 ? `1px solid ${T.red}22` : "none" }}>
+              <div style={{ background: T.red, color: "#fff", fontFamily: F.mono, fontSize: "0.58rem", fontWeight: 700, padding: "2px 7px", borderRadius: 50, flexShrink: 0, marginTop: 1 }}>
+                {i + 1}
+              </div>
+              <div>
+                <div style={{ fontFamily: F.mono, fontSize: "0.6rem", color: T.red, textTransform: "uppercase", letterSpacing: .5, marginBottom: 2 }}>{v.category}</div>
+                <div style={{ fontSize: "0.78rem", color: "#9ca3af", lineHeight: 1.4 }}>"{v.text}"</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Message */}
+        <div style={{ background: T.card, borderRadius: 12, padding: "14px 16px", marginBottom: 20 }}>
+          <p style={{ margin: 0, fontSize: "0.82rem", color: "#7a8296", lineHeight: 1.65 }}>
+            Tvoj nalog je <strong style={{ color: T.white }}>privremeno blokiran</strong> za komentarisanje na <strong style={{ color: T.gold }}>7 dana</strong> zbog višestrukih kršenja pravila. Ostale funkcije platforme ostaju dostupne.
+          </p>
+          <p style={{ margin: "10px 0 0", fontSize: "0.78rem", color: T.muted, lineHeight: 1.6 }}>
+            Posle 7 dana pristup se automatski vraća. Ako smatraš da je ovo greška, kontaktiraj podršku na <span style={{ color: T.gold }}>podrska@aifluent.rs</span>
+          </p>
+        </div>
+
+        <button onClick={onClose} style={{ ...btn(), width: "100%", background: T.card, color: T.muted, padding: 14, borderRadius: 14, fontSize: "0.85rem", fontFamily: F.body }}>
+          Zatvori
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// -- POST COMPOSER ----------------------------------------------------------
+function PostComposer({ onPost, onClose, onStrike, strikes }) {
+  const [text, setText] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [justStruck, setJustStruck] = useState(false);
+  const result = filterPost(text);
+  const charLimit = 400;
+  const hasText = text.trim().length >= 10;
+  const strikesLeft = 3 - strikes;
+
+  function handleSubmitAttempt() {
+    // Attempt to submit with blocked content — issue a strike
+    if (!result.ok && result.severity === "block") {
+      onStrike({ category: result.category, text: text.slice(0, 60) + (text.length > 60 ? "..." : "") });
+      setJustStruck(true);
+      setText("");
+      setTimeout(() => setJustStruck(false), 3000);
+      return;
+    }
+    if (!result.ok || !hasText) return;
+    setSubmitted(true);
+    setTimeout(() => { onPost(text); onClose(); }, 1200);
+  }
+
+  if (submitted) return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 500, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 12 }}>
+      <div style={{ fontSize: "3rem", animation: "bounceIn 0.5s" }}>✅</div>
+      <div style={{ fontFamily: F.display, fontSize: "1.5rem", color: T.green }}>OBJAVLJENO!</div>
+    </div>
+  );
+
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.82)", zIndex: 400, display: "flex", alignItems: "flex-end" }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: "100%", background: T.bg2, borderRadius: "20px 20px 0 0", padding: "20px 18px 36px" }}>
+        <div style={{ width: 36, height: 4, background: T.muted + "44", borderRadius: 2, margin: "0 auto 16px" }} />
+
+        {/* Header with strike counter */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+          <div style={{ fontFamily: F.display, fontSize: "1.4rem", color: T.white }}>NOVI POST</div>
+          {strikes > 0 && (
+            <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+              {[0,1,2].map(i => (
+                <div key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: i < strikes ? T.red : T.muted + "33", border: `1px solid ${i < strikes ? T.red : T.muted + "55"}`, transition: "all 0.3s" }} />
+              ))}
+              <span style={{ fontFamily: F.mono, fontSize: "0.56rem", color: T.muted, marginLeft: 4 }}>{strikesLeft} preostalo</span>
+            </div>
+          )}
+        </div>
+
+        {/* Strike warning flash */}
+        {justStruck && (
+          <div style={{ background: "rgba(255,107,107,0.12)", border: `1px solid ${T.red}55`, borderRadius: 12, padding: "12px 14px", marginBottom: 12, animation: "fadeSlideIn 0.2s ease" }}>
+            <div style={{ fontWeight: 700, fontSize: "0.85rem", color: T.red, marginBottom: 4 }}>
+              ⚠️ Upozorenje {strikes}/3 — Prekršaj zabeležen
+            </div>
+            <div style={{ fontSize: "0.78rem", color: "#cc8888", lineHeight: 1.5 }}>
+              {strikesLeft > 0
+                ? `Još ${strikesLeft} prekršaj${strikesLeft === 1 ? "" : "a"} i komentarisanje će biti blokirano na 7 dana.`
+                : "Ovo je bio poslednji prekršaj. Komentarisanje je blokirano na 7 dana."}
+            </div>
+          </div>
+        )}
+
+        <textarea
+          value={text}
+          onChange={e => setText(e.target.value.slice(0, charLimit))}
+          placeholder="Podeli AI trik, uspeh ili pitanje sa zajednicom..."
+          style={{
+            width: "100%", minHeight: 110, background: T.bg3,
+            border: `1px solid ${text.length > 0 && !result.ok ? T.red + "66" : "rgba(255,255,255,0.08)"}`,
+            borderRadius: 14, padding: "14px", color: T.white,
+            fontFamily: F.body, fontSize: "0.9rem", lineHeight: 1.6,
+            resize: "none", outline: "none", transition: "border 0.2s",
+          }}
+          autoFocus
+        />
+
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, marginBottom: 12 }}>
+          <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: T.muted }}>{charLimit - text.length} znakova</div>
+          <div style={{ display: "flex", gap: 6 }}>
+            {["Trik 💡", "Uspeh 🏆", "Pitanje ❓"].map(tag => (
+              <button key={tag} onClick={() => setText(t => t + tag.split(" ")[0] + ": ")} style={{ ...btn(), background: T.card, color: T.muted, padding: "4px 10px", borderRadius: 50, fontSize: "0.62rem", fontFamily: F.mono }}>
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Live filter feedback */}
+        {text.length > 5 && !result.ok && !justStruck && (
+          <div style={{ background: "rgba(255,107,107,0.08)", border: `1px solid ${T.red}44`, borderRadius: 12, padding: "12px 14px", marginBottom: 12, animation: "fadeSlideIn 0.25s ease" }}>
+            <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 6 }}>
+              <span>🚫</span>
+              <span style={{ fontFamily: F.mono, fontSize: "0.6rem", color: T.red, letterSpacing: 1, textTransform: "uppercase" }}>{result.category}</span>
+              {result.severity === "block" && <span style={{ fontFamily: F.mono, fontSize: "0.55rem", color: T.red, marginLeft: "auto" }}>→ STRIKE ako pokušaš da objaviš</span>}
+            </div>
+            <div style={{ fontSize: "0.8rem", color: "#cc8888", lineHeight: 1.5, marginBottom: 6 }}>{result.reason}</div>
+            <div style={{ fontSize: "0.78rem", color: T.green, lineHeight: 1.5 }}>💡 {result.suggestion}</div>
+          </div>
+        )}
+
+        {text.length >= 10 && result.ok && (
+          <div style={{ background: "rgba(46,207,122,0.07)", border: `1px solid ${T.green}33`, borderRadius: 12, padding: "10px 14px", marginBottom: 12, display: "flex", gap: 8, alignItems: "center", animation: "fadeSlideIn 0.25s ease" }}>
+            <span>✅</span>
+            <span style={{ fontSize: "0.8rem", color: T.green }}>Post je spreman za objavljivanje!</span>
+          </div>
+        )}
+
+        <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: T.muted, lineHeight: 1.8, marginBottom: 14 }}>
+          📋 Bez promocije · Bez negativnih komentara · Bez uvredljivog sadržaja
+        </div>
+
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={onClose} style={{ ...btn(), flex: 1, background: T.card, color: T.muted, padding: 14, borderRadius: 14, fontSize: "0.85rem", fontFamily: F.body }}>
+            Otkaži
+          </button>
+          <button
+            onClick={handleSubmitAttempt}
+            style={{ ...btn(), flex: 2, padding: 14, borderRadius: 14, fontSize: "0.88rem", fontFamily: F.body, transition: "all 0.2s",
+              background: !hasText ? T.muted + "22" : result.ok ? T.gold : `${T.red}cc`,
+              color: !hasText ? T.muted : result.ok ? "#000" : "#fff",
+            }}
+          >
+            {!hasText ? "Napiši nešto..." : result.ok ? "Objavi →" : "Pokušaj da objaviš →"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -- ZAJEDNICA SCREEN ------------------------------------------------------
+function ZajednicaScreen({ setTab, streak, savedTips }) {
+  const [feedTab, setFeedTab] = useState("feed");
+  const [liked, setLiked] = useState([]);
+  const [shareModal, setShareModal] = useState(false);
+
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [bannedScreenOpen, setBannedScreenOpen] = useState(false);
+  const [userPosts, setUserPosts] = useState([]);
+  const [strikes, setStrikes] = useState(0);
+  const [violations, setViolations] = useState([]);
+  const isBanned = strikes >= 3;
+
+  function handleStrike(violation) {
+    const newStrikes = strikes + 1;
+    const newViolations = [...violations, violation];
+    setStrikes(newStrikes);
+    setViolations(newViolations);
+    if (newStrikes >= 3) {
+      setComposerOpen(false);
+      setTimeout(() => setBannedScreenOpen(true), 300);
+    }
+  }
+
+  function handleOpenComposer() {
+    if (isBanned) { setBannedScreenOpen(true); return; }
+    setComposerOpen(true);
+  }
+
+  function handleNewPost(text) {
+    setUserPosts(p => [{
+      id: Date.now(), name: "Ti", avatar: "T", color: T.gold,
+      time: "upravo", course: "AI Počet.", likes: 0, text,
+    }, ...p]);
+  }
+
+  const allPosts = [...userPosts, ...COMMUNITY_POSTS];
+
+  return (
+    <div style={{ paddingBottom: 90 }}>
+      {bannedScreenOpen && <BannedScreen violations={violations} onClose={() => setBannedScreenOpen(false)} />}
+      {composerOpen && !isBanned && <PostComposer onPost={handleNewPost} onClose={() => setComposerOpen(false)} onStrike={handleStrike} strikes={strikes} />}
+      {/* Header */}
+      <div style={{ padding: "52px 16px 0" }}>
+        <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 }}>// Zajednica</div>
+        <div style={{ fontFamily: F.display, fontSize: "2.2rem", color: T.white, lineHeight: 1, marginBottom: 6 }}>
+          AI FLUENT <span style={{ color: T.gold }}>ZAJEDNICA</span>
+        </div>
+        <p style={{ color: T.muted, fontSize: "0.82rem", marginBottom: 16, lineHeight: 1.5 }}>
+          Deli trikove, pitaj šta hoćeš, uči od drugih studenata.
+        </p>
+
+        {/* My stats quick row */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 16 }}>
+          {[
+            [streak >= 7 ? "🔥" : "⚡", `${streak} dana`, "Tvoj niz"],
+            ["💾", `${savedTips}`, "Sačuvano"],
+          ].map(([ic, val, lbl]) => (
+            <div key={lbl} style={{ background: T.card, borderRadius: 12, padding: "12px 10px", textAlign: "center" }}>
+              <div style={{ fontSize: "1.1rem", marginBottom: 2 }}>{ic}</div>
+              <div style={{ fontFamily: F.display, fontSize: "1.3rem", color: T.gold, lineHeight: 1 }}>{val}</div>
+              <div style={{ fontFamily: F.mono, fontSize: "0.55rem", color: T.muted, marginTop: 2 }}>{lbl}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Sub-tabs */}
+        <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
+          {[["feed","📰 Feed"],["challenge","⚡ Izazov"]].map(([id, label]) => (
+            <button key={id} onClick={() => setFeedTab(id)} style={{ ...btn(), flex: 1, padding: "9px 0", borderRadius: 10, background: feedTab === id ? T.gold : T.card, color: feedTab === id ? "#000" : T.muted, fontSize: "0.72rem", border: feedTab === id ? "none" : "1px solid rgba(255,255,255,0.06)" }}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* FEED */}
+      {feedTab === "feed" && (
+        <div style={{ padding: "0 16px" }}>
+          {/* Post CTA */}
+          <div style={{ background: T.card, border: `1px solid ${isBanned ? T.red + "44" : T.border}`, borderRadius: 14, padding: "12px 14px", marginBottom: 12, display: "flex", gap: 10, alignItems: "center" }}>
+            <div style={{ width: 34, height: 34, borderRadius: "50%", background: isBanned ? "rgba(255,107,107,0.12)" : T.goldSoft, border: `1px solid ${isBanned ? T.red + "44" : T.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1rem" }}>
+              {isBanned ? "🚫" : "😊"}
+            </div>
+            <button onClick={handleOpenComposer} style={{ ...btn(), flex: 1, background: "rgba(255,255,255,0.04)", border: "none", borderRadius: 20, padding: "10px 14px", textAlign: "left", color: T.muted, fontSize: "0.82rem", fontFamily: F.body }}>
+              {isBanned ? "Komentarisanje je blokirano" : "Podeli AI trik koji te oduševio..."}
+            </button>
+            {!isBanned && (
+              <button onClick={handleOpenComposer} style={{ ...btn(), background: T.gold, color: "#000", padding: "8px 14px", borderRadius: 20, fontSize: "0.72rem", fontFamily: F.body }}>
+                Objavi
+              </button>
+            )}
+            {isBanned && (
+              <button onClick={() => setBannedScreenOpen(true)} style={{ ...btn(), background: "rgba(255,107,107,0.15)", color: T.red, padding: "8px 14px", borderRadius: 20, fontSize: "0.72rem", fontFamily: F.mono, border: `1px solid ${T.red}44` }}>
+                Info
+              </button>
+            )}
+          </div>
+
+          {/* Posts */}
+          {allPosts.map(post => (
+            <div key={post.id} style={{ background: T.card, border: "1px solid rgba(255,255,255,0.05)", borderRadius: 16, padding: "16px", marginBottom: 10 }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 10 }}>
+                <Avatar name={post.avatar} color={post.color} size={36} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, fontSize: "0.85rem" }}>{post.name}</div>
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <Pill color={post.color} size="sm">{post.course}</Pill>
+                    <span style={{ fontFamily: F.mono, fontSize: "0.55rem", color: T.muted }}>{post.time}</span>
+                  </div>
+                </div>
+              </div>
+              <p style={{ color: "#9ca3af", fontSize: "0.83rem", lineHeight: 1.6, marginBottom: 12 }}>{post.text}</p>
+              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <button onClick={() => setLiked(l => l.includes(post.id) ? l.filter(x => x !== post.id) : [...l, post.id])} style={{ ...btn(), background: "none", color: liked.includes(post.id) ? T.red : T.muted, fontSize: "0.8rem", display: "flex", gap: 5, alignItems: "center", fontFamily: F.body }}>
+                  {liked.includes(post.id) ? "❤️" : "🤍"} {post.likes + (liked.includes(post.id) ? 1 : 0)}
+                </button>
+                <button style={{ ...btn(), background: "none", color: T.muted, fontSize: "0.8rem", fontFamily: F.body }}>💬 Odgovori</button>
+                <button onClick={() => setShareModal(true)} style={{ ...btn(), background: "none", color: T.blue, fontSize: "0.8rem", fontFamily: F.body, marginLeft: "auto" }}>📤 Podeli</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* DAILY CHALLENGE */}
+      {feedTab === "challenge" && (
+        <div style={{ padding: "0 16px" }}>
+          <div style={{ background: `linear-gradient(135deg, ${T.purple}18, ${T.bg3})`, border: `1px solid ${T.purple}44`, borderRadius: 18, padding: "22px 18px", marginBottom: 14 }}>
+            <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: T.purple, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>⚡ Izazov dana</div>
+            <div style={{ fontFamily: F.display, fontSize: "1.6rem", color: T.white, lineHeight: 1.1, marginBottom: 10 }}>
+              NAPIŠI AI MEJL<br />ZA KLIJENTA
+            </div>
+            <p style={{ color: T.muted, fontSize: "0.82rem", lineHeight: 1.6, marginBottom: 16 }}>
+              Koristi AI da napišeš profesionalan mejl klijentu koji kasni sa plaćanjem. Ton: ljubazan ali direktan. Podeli rezultat u zajednici.
+            </p>
+            <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+              <Pill color={T.purple}>Dnevni izazov</Pill>
+              <Pill color={T.green}>🎁 Bonus</Pill>
+              <Pill color={T.red}>⏰ Ističe za 8h</Pill>
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => setTab("learn")} style={{ ...btn(), flex: 1, background: T.purple, color: "#fff", padding: "12px", borderRadius: 12, fontSize: "0.85rem", fontFamily: F.body }}>
+                Prihvati izazov →
+              </button>
+              <button onClick={() => setShareModal(true)} style={{ ...btn(), padding: "12px 14px", background: "rgba(167,139,250,0.12)", border: `1px solid ${T.purple}33`, color: T.purple, borderRadius: 12, fontSize: "0.82rem", fontFamily: F.body }}>
+                📤
+              </button>
+            </div>
+          </div>
+
+          {/* Past challenges */}
+          <div style={{ fontFamily: F.mono, fontSize: "0.6rem", color: T.muted, letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>Prethodni izazovi</div>
+          {[
+            ["✍️","Napiši Instagram bio za biznis","312 učesnika","Završeno"],
+            ["📊","Prezentacija od 5 slajdova za 5 min","198 učesnika","Završeno"],
+            ["🎯","Plan nedeljnih ciljeva sa AI","445 učesnika","Završeno"],
+          ].map(([ic, title, participants, status]) => (
+            <div key={title} style={{ background: T.card, borderRadius: 12, padding: "12px 14px", marginBottom: 8, display: "flex", gap: 10, alignItems: "center", opacity: 0.6 }}>
+              <span style={{ fontSize: "1.2rem" }}>{ic}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 600, fontSize: "0.82rem" }}>{title}</div>
+                <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: T.muted }}>{participants}</div>
+              </div>
+              <Pill color={T.muted}>{status}</Pill>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Share modal */}
+      {shareModal && (
+        <div onClick={() => setShareModal(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", zIndex: 400, display: "flex", alignItems: "flex-end" }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: "100%", background: T.bg2, borderRadius: "20px 20px 0 0", padding: "24px 20px 40px" }}>
+            <div style={{ width: 36, height: 4, background: T.muted + "44", borderRadius: 2, margin: "0 auto 20px" }} />
+            <div style={{ fontFamily: F.display, fontSize: "1.5rem", marginBottom: 16 }}>PODELI NAPREDAK</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              {[
+                ["📸", "Instagram Story", "#000", "linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)"],
+                ["🎵", "TikTok", T.white, "#000"],
+                ["💼", "LinkedIn", T.white, "#0077b5"],
+                ["📱", "WhatsApp", T.white, "#25d366"],
+              ].map(([ic, label, color, bg]) => (
+                <button key={label} onClick={() => setShareModal(false)} style={{ ...btn(), background: bg, color: color, padding: "14px", borderRadius: 14, fontSize: "0.85rem", fontFamily: F.body, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  <span style={{ fontSize: "1.2rem" }}>{ic}</span> {label}
+                </button>
+              ))}
+            </div>
+            <button onClick={() => setShareModal(false)} style={{ ...btn(), width: "100%", marginTop: 12, background: "none", color: T.muted, padding: 12, fontSize: "0.85rem", fontFamily: F.body }}>Otkaži</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// -- BOTTOM NAV ----------------------------------------------------------
+function BottomNav({ tab, setTab, hasNotif }) {
+  const tabs = [
+    { id: "home",      icon: "🏠", label: "Početna" },
+    { id: "courses",   icon: "📚", label: "Kursevi" },
+    { id: "learn",     icon: "▶️", label: "Uči" },
+    { id: "zajednica", icon: "👥", label: "Zajednica", notif: hasNotif },
+    { id: "profile",   icon: "👤", label: "Profil" },
+  ];
+  return (
+    <div style={{
+      position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
+      background: T.bg2, borderTop: `1px solid rgba(255,255,255,0.07)`,
+      display: "flex", padding: "8px 0 max(8px, env(safe-area-inset-bottom))",
+    }}>
+      {tabs.map(t => (
+        <button key={t.id} onClick={() => setTab(t.id)} style={{
+          ...btn(), flex: 1, background: "none",
+          display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
+          padding: "6px 0", position: "relative",
+        }}>
+          <span style={{ fontSize: "1.25rem", lineHeight: 1 }}>{t.icon}</span>
+          {t.notif && (
+            <div style={{ position: "absolute", top: 2, right: "calc(50% - 14px)", width: 8, height: 8, borderRadius: "50%", background: T.red, border: `2px solid ${T.bg2}` }} />
+          )}
+          <span style={{
+            fontFamily: F.mono, fontSize: "0.53rem", letterSpacing: "0.3px",
+            color: tab === t.id ? T.gold : T.muted,
+            fontWeight: tab === t.id ? 700 : 400,
+          }}>{t.label}</span>
+          {tab === t.id && (
+            <div style={{ width: 16, height: 2, background: T.gold, borderRadius: 2, position: "absolute", bottom: "max(10px, env(safe-area-inset-bottom))" }} />
+          )}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// -- FAQ ITEM (extracted to fix React Rules of Hooks — hooks can't be inside .map()) --
+function FAQItem({ f }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div onClick={() => setOpen(!open)} style={{ background: T.card, borderRadius: 14, padding: "16px 18px", marginBottom: 8, cursor: "pointer" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+        <span style={{ fontWeight: 700, fontSize: "0.88rem", lineHeight: 1.4 }}>{f.q}</span>
+        <span style={{ color: T.gold, fontSize: "1rem", flexShrink: 0, transition: "transform 0.2s", display: "inline-block", transform: open ? "rotate(45deg)" : "rotate(0)" }}>+</span>
+      </div>
+      {open && <p style={{ color: T.muted, fontSize: "0.82rem", marginTop: 12, lineHeight: 1.6 }}>{f.a}</p>}
+    </div>
+  );
+}
+
+// -- HOME SCREEN ----------------------------------------------------------
+function HomeScreen({ setTab, setCourse, user, triggerQuiz, streak, savedTips, onSaveTip }) {
+  const [hookIdx, setHookIdx] = useState(0);
+  const [expanded, setExpanded] = useState(null);
+
+  useEffect(() => {
+    const t = setInterval(() => setHookIdx(i => (i + 1) % RELATABLE_HOOKS.length), 3000);
+    return () => clearInterval(t);
+  }, []);
+
+  const hook = RELATABLE_HOOKS[hookIdx];
+
+  return (
+    <div style={{ paddingBottom: 80 }}>
+
+      {/* TOP BAR */}
+      <div style={{ padding: "52px 20px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.muted, letterSpacing: 2, textTransform: "uppercase" }}>Dobrodošao u</div>
+          <div style={{ fontFamily: F.display, fontSize: "1.8rem", letterSpacing: 3, color: T.gold, lineHeight: 1.1 }}>AI<span style={{ color: T.white }}>FLUENT</span></div>
+        </div>
+        <button onClick={() => setTab("profile")} style={{ ...btn(), background: T.goldSoft, border: `1px solid ${T.border}`, width: 40, height: 40, borderRadius: "50%", color: T.gold, fontSize: "1.1rem" }}>
+          {user ? user.name[0] : "👤"}
+        </button>
+      </div>
+
+      {/* HERO CARD */}
+      <div style={{ margin: "20px 16px 0", background: `linear-gradient(135deg, #1a1507, ${T.bg3})`, border: `1px solid ${T.border}`, borderRadius: 20, padding: "28px 24px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", right: -20, top: -20, fontSize: "7rem", opacity: 0.07 }}>🤖</div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+          <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.green, animation: "pulse 2s infinite" }} />
+          <span style={{ fontFamily: F.mono, fontSize: "0.6rem", color: T.green, letterSpacing: 2, textTransform: "uppercase" }}>Dostupno na telefonu</span>
+        </div>
+
+        <div style={{ fontFamily: F.display, fontSize: "2.4rem", lineHeight: 1, color: T.white, marginBottom: 4 }}>
+          <span style={{ color: T.gold }}>{hook.icon} </span>
+          {hook.hook}
+        </div>
+        <p style={{ color: T.muted, fontSize: "0.88rem", margin: "10px 0 20px", lineHeight: 1.5 }}>
+          {hook.sub}
+        </p>
+
+        {/* Dots */}
+        <div style={{ display: "flex", gap: 5, marginBottom: 20 }}>
+          {RELATABLE_HOOKS.map((_, i) => (
+            <div key={i} style={{ height: 4, borderRadius: 2, transition: "all 0.3s", background: i === hookIdx ? T.gold : T.muted + "44", width: i === hookIdx ? 20 : 8 }} />
+          ))}
+        </div>
+
+        <button onClick={() => setTab("courses")} style={{ ...btn(), background: T.gold, color: "#000", padding: "14px 28px", borderRadius: 50, fontSize: "0.9rem", width: "100%" }}>
+          Pogledaj kurseve →
+        </button>
+      </div>
+
+      {/* Šta kurs nudi — bez fake brojeva */}
+      <div style={{ margin: "14px 16px", background: T.card, borderRadius: 14, padding: "16px 20px", display: "flex", justifyContent: "space-around" }}>
+        {[["⚡", "Za vikend"], ["📱", "Na telefonu"], ["🇷🇸", "Na srpskom"]].map(([ic, l]) => (
+          <div key={l} style={{ textAlign: "center" }}>
+            <div style={{ fontSize: "1.6rem", lineHeight: 1, marginBottom: 4 }}>{ic}</div>
+            <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: T.muted, letterSpacing: 1, textTransform: "uppercase" }}>{l}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Streak + Daily tip */}
+      <StreakBanner streak={streak} onOpen={() => setTab("zajednica")} />
+      <DailyTipCard
+        tip={DAILY_TIPS[new Date().getDay()]}
+        saved={savedTips > 0}
+        onSave={onSaveTip}
+        onShare={() => setTab("zajednica")}
+      />
+
+      {/* ZA KOGA JE OVO */}
+      <div style={{ padding: "24px 16px 0" }}>
+        <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>// Zvuči poznato?</div>
+        <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: T.white, marginBottom: 16, lineHeight: 1 }}>
+          PREPOZNAJEŠ LI SE <span style={{ color: T.gold }}>U OVOME?</span>
+        </div>
+        {PAIN_POINTS.map((p, i) => (
+          <div key={i} onClick={() => setExpanded(expanded === i ? null : i)} style={{
+            background: T.card, borderRadius: 14, padding: "16px 18px",
+            marginBottom: 8, border: `1px solid ${expanded === i ? T.border : "transparent"}`,
+            transition: "border 0.2s",
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <span style={{ fontSize: "1.3rem" }}>{p.icon}</span>
+                <span style={{ fontWeight: 700, fontSize: "0.9rem" }}>{p.title}</span>
+              </div>
+              <span style={{ color: T.gold, fontSize: "0.9rem", transition: "transform 0.2s", display: "inline-block", transform: expanded === i ? "rotate(45deg)" : "rotate(0)" }}>+</span>
+            </div>
+            {expanded === i && (
+              <div style={{ marginTop: 12, padding: "12px 14px", background: T.greenSoft, borderRadius: 10, borderLeft: `3px solid ${T.green}` }}>
+                <span style={{ color: T.green, fontSize: "0.85rem", fontWeight: 600 }}>✓ Rešenje: </span>
+                <span style={{ color: "#9ca3af", fontSize: "0.85rem" }}>{p.fix}</span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* PRIČE */}
+      <div style={{ padding: "28px 16px 0" }}>
+        <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>// Priče studenata</div>
+        <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: T.white, marginBottom: 16, lineHeight: 1 }}>
+          KAO <span style={{ color: T.gold }}>TVOJI KOMŠIJE</span>
+        </div>
+        <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 8, scrollbarWidth: "none" }}>
+          {STORIES.map((s, i) => (
+            <div key={i} style={{ minWidth: 260, background: T.card, borderRadius: 16, padding: "20px 18px", border: `1px solid ${s.color}22`, flexShrink: 0 }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 14 }}>
+                <Avatar name={s.avatar} color={s.color} size={38} />
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: "0.88rem" }}>{s.name}</div>
+                  <div style={{ color: T.muted, fontSize: "0.72rem" }}>{s.job}</div>
+                </div>
+                <Pill color={s.color}>{s.course}</Pill>
+              </div>
+              <div style={{ color: T.muted, fontSize: "0.78rem", marginBottom: 10, fontStyle: "italic", lineHeight: 1.5 }}>
+                „{s.before}"
+              </div>
+              <div style={{ background: `${s.color}12`, borderLeft: `3px solid ${s.color}`, padding: "10px 12px", borderRadius: "0 8px 8px 0", fontSize: "0.78rem", color: T.white, lineHeight: 1.5 }}>
+                ✓ {s.after}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* FAQ */}
+      <div style={{ padding: "28px 16px 0" }}>
+        <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>// Pitanja</div>
+        <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: T.white, marginBottom: 16, lineHeight: 1 }}>
+          ODGOVARAMO <span style={{ color: T.gold }}>ODMAH</span>
+        </div>
+        {FAQS.map((f, i) => <FAQItem key={i} f={f} />)}
+      </div>
+
+      {/* FINAL CTA */}
+      <div style={{ margin: "24px 16px", background: T.gold, borderRadius: 20, padding: "28px 24px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F.display, fontSize: "10rem", color: "rgba(0,0,0,0.05)", lineHeight: 1 }}>AI</div>
+        <div style={{ fontFamily: F.display, fontSize: "2rem", color: "#000", marginBottom: 8, position: "relative" }}>POČNI DANAS.</div>
+        <p style={{ color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", marginBottom: 20, lineHeight: 1.5, position: "relative" }}>
+          Za godinu dana ćeš se pitati zašto nisi počeo ranije. Platiš jednom — tvoje zauvek.
+        </p>
+        <button onClick={() => setTab("courses")} style={{ ...btn(), background: "#000", color: T.gold, padding: "14px 32px", borderRadius: 50, fontSize: "0.9rem", position: "relative" }}>
+          Izaberi paket →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// -- COURSES SCREEN --------------------------------------------------------
+function CoursesScreen({ setCourse, setTab }) {
+  return (
+    <div style={{ paddingBottom: 80 }}>
+      <div style={{ padding: "52px 20px 20px" }}>
+        <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6 }}>// Izaberi paket</div>
+        <div style={{ fontFamily: F.display, fontSize: "2.2rem", color: T.white, lineHeight: 1, marginBottom: 8 }}>
+          KOJI TI <span style={{ color: T.gold }}>ODGOVARA?</span>
+        </div>
+        <p style={{ color: T.muted, fontSize: "0.85rem", lineHeight: 1.5 }}>Nema pogrešnog izbora — lifetime pristup i uvek možeš nadograditi.</p>
+      </div>
+
+      {/* TRUST STRIP */}
+      <div style={{ margin: "0 16px 12px", background: T.greenSoft, border: `1px solid ${T.green}33`, borderRadius: 12, padding: "12px 16px", display: "flex", gap: 10, alignItems: "center" }}>
+        <span style={{ fontSize: "1.4rem" }}>🔒</span>
+        <div style={{ fontSize: "0.8rem", color: T.green, lineHeight: 1.4 }}>
+          <strong>Lifetime pristup.</strong> Platiš jednom — kurs je tvoj zauvek, uključujući sva buduća ažuriranja.
+        </div>
+      </div>
+      <div style={{ margin: "0 16px 20px", background: "rgba(167,139,250,0.07)", border: `1px solid ${T.purple}33`, borderRadius: 12, padding: "12px 16px", display: "flex", gap: 10, alignItems: "center" }}>
+        <span style={{ fontSize: "1.4rem" }}>🛡️</span>
+        <div style={{ fontSize: "0.8rem", color: T.purple, lineHeight: 1.4 }}>
+          <strong>30 dana garancija povraćaja.</strong> Nije za tebe? Vraćamo novac bez pitanja.
+        </div>
+      </div>
+
+      {/* URGENCY STRIP — dinamički countdown */}
+      {(() => {
+        const deadline = new Date("2025-04-01T23:59:59");
+        const now = new Date();
+        const diff = deadline - now;
+        const active = diff > 0;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const label = active
+          ? (days > 0 ? `Starter cene ističu za ${days} dan${days === 1 ? "" : days < 5 ? "a" : "a"}` : `Starter cene ističu za ${hours}h`)
+          : "Ograničene starter cene — dok traje";
+        return (
+          <div style={{ margin: "0 16px 20px", background: "rgba(245,166,35,0.07)", border: `1px solid ${T.gold}33`, borderRadius: 12, padding: "12px 16px", display: "flex", gap: 10, alignItems: "center" }}>
+            <span style={{ fontSize: "1.2rem" }}>⏳</span>
+            <div style={{ fontSize: "0.8rem", color: T.gold, lineHeight: 1.4 }}>
+              <strong>{label}.</strong> Nakon toga cene rastu. Prijaviš se danas — platiš manje, dobijaš isto.
+            </div>
+          </div>
+        );
+      })()}
+
+      {COURSES.map((c, i) => (
+        <CourseCard key={c.id} course={c} isPopular={i === 1} onSelect={() => { setCourse(c); setTab("learn"); }} />
+      ))}
+
+      {/* BUNDLE */}
+      <div style={{ margin: "0 16px 20px", background: `linear-gradient(135deg, ${T.bg3}, ${T.bg2})`, border: `2px dashed ${T.border}`, borderRadius: 20, padding: "24px 20px" }}>
+        <Pill color={T.purple}>🎁 BUNDLE PONUDA</Pill>
+        <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: T.white, margin: "10px 0 6px", lineHeight: 1 }}>SVI KURSEVI</div>
+        <p style={{ color: T.muted, fontSize: "0.82rem", marginBottom: 14, lineHeight: 1.5 }}>Početnički + Napredni + Ekspert. Uštedi <strong style={{ color: T.gold }}>€98</strong> u odnosu na kupovinu odvojeno.</p>
+        {[
+          ["🌱", "AI Početnik", "Osnove, mejlovi, CV, svakodnevni zadaci", "€49"],
+          ["⚡", "AI Napredni", "Automatizacije, marketing, 15h uštede/nedelji", "€149"],
+          ["🚀", "AI Ekspert", "Pokreni AI biznis, nađi klijente, zarađuj", "€349"],
+        ].map(([em, title, desc, price]) => (
+          <div key={title} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10, background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: "10px 12px" }}>
+            <span style={{ fontSize: "1.1rem", flexShrink: 0 }}>{em}</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 700, fontSize: "0.82rem", color: T.white }}>{title} <span style={{ color: T.muted, textDecoration: "line-through", fontWeight: 400 }}>{price}</span></div>
+              <div style={{ fontSize: "0.75rem", color: T.muted, lineHeight: 1.4 }}>{desc}</div>
+            </div>
+            <span style={{ color: T.green, fontSize: "0.8rem", flexShrink: 0 }}>✓</span>
+          </div>
+        ))}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <div>
+            <span style={{ fontFamily: F.display, fontSize: "2rem", color: T.gold }}>€449</span>
+            <span style={{ color: T.muted, textDecoration: "line-through", marginLeft: 8, fontSize: "0.85rem" }}>€547</span>
+            <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: T.green, marginTop: 2 }}>Lifetime pristup · Sva ažuriranja besplatno</div>
+          </div>
+          <button style={{ ...btn(), background: T.purple, color: "#fff", padding: "12px 24px", borderRadius: 50, fontSize: "0.85rem" }}>
+            Uzmi sve
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CourseCard({ course: c, isPopular, onSelect }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ margin: "0 16px 16px" }}>
+      <div style={{
+        background: T.card, borderRadius: 20,
+        border: `1px solid ${isPopular ? c.color + "66" : "rgba(255,255,255,0.06)"}`,
+        overflow: "hidden",
+      }}>
+        {/* Header */}
+        <div style={{ background: `linear-gradient(135deg, ${c.color}18, transparent)`, padding: "20px 20px 16px", position: "relative" }}>
+          {c.badge && (
+            <div style={{ position: "absolute", top: 0, right: 0, background: c.color, color: "#000", fontFamily: F.mono, fontSize: "0.55rem", fontWeight: 800, letterSpacing: 1.5, padding: "4px 12px", borderRadius: "0 0 0 10px" }}>
+              {c.badge}
+            </div>
+          )}
+          <div style={{ fontSize: "2.4rem", marginBottom: 8 }}>{c.emoji}</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: c.color, lineHeight: 1 }}>{c.title}</div>
+              <div style={{ color: T.muted, fontSize: "0.8rem", marginTop: 4, lineHeight: 1.4 }}>{c.tagline}</div>
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <div style={{ fontFamily: F.display, fontSize: "2rem", color: T.gold, lineHeight: 1 }}>€{c.price}</div>
+              <div style={{ color: T.muted, fontSize: "0.72rem", textDecoration: "line-through" }}>€{c.oldPrice}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Relatable hook */}
+        <div style={{ margin: "0 20px", padding: "12px 14px", background: `${c.color}10`, borderRadius: 10, borderLeft: `3px solid ${c.color}` }}>
+          <span style={{ fontSize: "0.8rem", color: c.color, fontWeight: 700 }}>💡 </span>
+          <span style={{ fontSize: "0.8rem", color: "#9ca3af" }}>{c.relatable}</span>
+        </div>
+
+        {/* Mini testimonial */}
+        {COURSE_STORY[c.id] && (() => { const s = COURSE_STORY[c.id]; return (
+          <div style={{ margin: "10px 20px 0", padding: "12px 14px", background: "rgba(255,255,255,0.03)", borderRadius: 10, display: "flex", gap: 10, alignItems: "flex-start" }}>
+            <Avatar name={s.avatar} color={s.color} size={30} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: "0.75rem", color: "#9ca3af", fontStyle: "italic", lineHeight: 1.45, marginBottom: 4 }}>„{s.after}"</div>
+              <div style={{ fontFamily: F.mono, fontSize: "0.55rem", color: T.muted }}>{s.name} · {s.job}</div>
+            </div>
+          </div>
+        ); })()}
+
+        {/* Meta */}
+        <div style={{ padding: "14px 20px", display: "flex", gap: 16, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+          {[["📱", `${c.lessons} lekcija`], ["⏱", c.duration], ["✅", "Lifetime pristup"]].map(([ic, tx]) => (
+            <span key={tx} style={{ fontFamily: F.mono, fontSize: "0.65rem", color: T.muted, display: "flex", gap: 5, alignItems: "center" }}>
+              <span>{ic}</span><span>{tx}</span>
+            </span>
+          ))}
+        </div>
+
+        {/* What you get */}
+        <div style={{ padding: "16px 20px" }}>
+          {c.whatYouGet.slice(0, 3).map((w, i) => (
+            <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 8 }}>
+              <span style={{ color: T.green, fontSize: "0.8rem", flexShrink: 0, marginTop: 1 }}>✓</span>
+              <span style={{ color: "#9ca3af", fontSize: "0.82rem", lineHeight: 1.4 }}>{w}</span>
+            </div>
+          ))}
+
+          {/* Expandable */}
+          <button onClick={() => setOpen(!open)} style={{ ...btn(), background: "none", color: T.gold, fontSize: "0.78rem", padding: "6px 0", display: "flex", alignItems: "center", gap: 6 }}>
+            <span>{open ? "Sakrij" : `+${c.whatYouGet.length - 3} više`}</span>
+            <span style={{ transition: "transform 0.2s", display: "inline-block", transform: open ? "rotate(180deg)" : "" }}>▼</span>
+          </button>
+
+          {open && c.whatYouGet.slice(3).map((w, i) => (
+            <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginTop: 8 }}>
+              <span style={{ color: T.green, fontSize: "0.8rem", flexShrink: 0, marginTop: 1 }}>✓</span>
+              <span style={{ color: "#9ca3af", fontSize: "0.82rem", lineHeight: 1.4 }}>{w}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div style={{ padding: "0 16px 16px" }}>
+          <button onClick={onSelect} style={{ ...btn(), background: c.color, color: c.color === T.gold ? "#000" : "#fff", padding: "16px", borderRadius: 14, fontSize: "0.92rem", width: "100%", fontFamily: F.body }}>
+            Kupi {c.title} — €{c.price}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -- LEARN SCREEN (Course Detail + Player) --------------------------------
+function LearnScreen({ course, setCourse, setTab, user, triggerQuiz, purchasedCourses = [], onPurchase }) {
+  const [activeModule, setActiveModule] = useState(0);
+  const [activeLesson, setActiveLesson] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+  const c = course || COURSES[0];
+  const mod = c.modules[activeModule];
+  const lesson = mod?.lessons[activeLesson];
+  const purchased = purchasedCourses.some(x => x.id === c.id);
+
+  if (checkoutOpen) return (
+    <CheckoutFlow course={c} onBack={() => setCheckoutOpen(false)} onSuccess={() => { onPurchase && onPurchase(c); setCheckoutOpen(false); }} />
+  );
+
+  return (
+    <div style={{ paddingBottom: 80 }}>
+      {/* Header */}
+      <div style={{ padding: "52px 16px 16px", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div>
+          <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6 }}>
+            {purchased ? "// Tvoj kurs" : "// Pregled"}
+          </div>
+          <div style={{ fontFamily: F.display, fontSize: "2rem", color: c.color, lineHeight: 1 }}>{c.title}</div>
+          <div style={{ color: T.muted, fontSize: "0.8rem", marginTop: 4 }}>{c.tagline}</div>
+        </div>
+        <button onClick={() => setTab("courses")} style={{ ...btn(), background: T.card, color: T.muted, padding: "8px 14px", borderRadius: 10, fontSize: "0.78rem" }}>
+          ← Kursevi
+        </button>
+      </div>
+
+      {/* Video area */}
+      <div style={{ margin: "0 16px", background: "#000", borderRadius: 16, overflow: "hidden", aspectRatio: "16/9", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+        <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${c.color}20, #000)` }} />
+        {!playing ? (
+          <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
+            <button onClick={() => purchased ? setPlaying(true) : setCheckoutOpen(true)} style={{ ...btn(), width: 64, height: 64, borderRadius: "50%", background: purchased ? c.color : "rgba(255,255,255,0.15)", border: purchased ? "none" : "2px solid rgba(255,255,255,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem", margin: "0 auto 10px" }}>
+              {purchased ? "▶" : "🔒"}
+            </button>
+            <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.muted, letterSpacing: 1 }}>
+              {purchased ? lesson : "Kupi kurs da otključaš"}
+            </div>
+          </div>
+        ) : (
+          <div style={{ textAlign: "center", position: "relative", zIndex: 1, padding: 20 }}>
+            <div style={{ fontSize: "3rem", marginBottom: 8 }}>📹</div>
+            <div style={{ color: c.color, fontFamily: F.display, fontSize: "1.2rem" }}>REPRODUKCIJA</div>
+            <div style={{ color: T.muted, fontSize: "0.75rem", marginTop: 4 }}>{lesson}</div>
+            <button onClick={() => setPlaying(false)} style={{ ...btn(), background: "rgba(255,255,255,0.1)", color: T.white, padding: "8px 20px", borderRadius: 50, marginTop: 12, fontSize: "0.78rem" }}>⏸ Pauza</button>
+          </div>
+        )}
+      </div>
+
+      {/* Buy CTA if not purchased */}
+      {!purchased && (
+        <div style={{ margin: "14px 16px", background: `${c.color}12`, border: `1px solid ${c.color}33`, borderRadius: 16, padding: "18px 18px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.9rem", marginBottom: 2 }}>Otključaj sve lekcije</div>
+              <div style={{ color: T.muted, fontSize: "0.75rem" }}>Lifetime pristup · Sva ažuriranja besplatno</div>
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: T.gold }}>€{c.price}</div>
+              <div style={{ color: T.muted, fontSize: "0.7rem", textDecoration: "line-through" }}>€{c.oldPrice}</div>
+            </div>
+          </div>
+          <button onClick={() => setCheckoutOpen(true)} style={{ ...btn(), background: c.color, color: c.color === T.gold ? "#000" : "#fff", padding: "14px", borderRadius: 12, fontSize: "0.9rem", width: "100%" }}>
+            Kupi sada — €{c.price}
+          </button>
+        </div>
+      )}
+
+      {/* Curriculum */}
+      <div style={{ padding: "20px 16px 0" }}>
+        <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 12 }}>Sadržaj kursa</div>
+        {c.modules.map((m, mi) => (
+          <div key={mi} style={{ background: T.card, borderRadius: 14, marginBottom: 8, overflow: "hidden" }}>
+            <button onClick={() => setActiveModule(mi === activeModule ? -1 : mi)} style={{ ...btn(), width: "100%", padding: "16px 18px", background: "none", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: "0.88rem", color: mi === activeModule ? c.color : T.white }}>{m.title}</div>
+                <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.muted, marginTop: 3 }}>{m.lessons.length} lekcija · {m.dur}</div>
+              </div>
+              <span style={{ color: c.color, transition: "transform 0.2s", display: "inline-block", transform: mi === activeModule ? "rotate(180deg)" : "" }}>▼</span>
+            </button>
+            {mi === activeModule && (
+              <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                {m.lessons.map((l, li) => (
+                  <button key={li} onClick={() => { if (purchased) { setActiveLesson(li); setPlaying(false); } }} style={{ ...btn(), width: "100%", padding: "12px 18px 12px 28px", background: li === activeLesson && purchased ? `${c.color}10` : "none", textAlign: "left", display: "flex", gap: 10, alignItems: "center", borderTop: "1px solid rgba(255,255,255,0.03)" }}>
+                    <div style={{ width: 22, height: 22, borderRadius: "50%", background: purchased && li < 1 ? T.green : `${c.color}22`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", flexShrink: 0, color: purchased && li < 1 ? "#000" : c.color }}>
+                      {purchased && li < 1 ? "✓" : purchased ? "▶" : "🔒"}
+                    </div>
+                    <span style={{ fontSize: "0.8rem", color: li === activeLesson && purchased ? c.color : "#9ca3af" }}>{l}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* What you get */}
+      <div style={{ margin: "20px 16px 0", background: T.card, borderRadius: 16, padding: "20px 18px" }}>
+        <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 12 }}>Šta dobijaš</div>
+        {c.whatYouGet.map((w, i) => (
+          <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10 }}>
+            <span style={{ color: T.green, fontSize: "0.85rem", flexShrink: 0, marginTop: 1 }}>✓</span>
+            <span style={{ color: "#9ca3af", fontSize: "0.85rem", lineHeight: 1.5 }}>{w}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* FINISH COURSE — Quiz trigger */}
+      {purchased && (
+        <div style={{ margin: "16px 16px 0" }}>
+          <button
+            onClick={() => triggerQuiz(c)}
+            style={{
+              ...btn(),
+              width: "100%", padding: 18, borderRadius: 16,
+              background: `linear-gradient(135deg, ${c.color}, ${c.color}bb)`,
+              color: c.color === T.gold ? "#000" : "#fff", fontSize: "1rem", fontFamily: F.body,
+              boxShadow: `0 8px 32px ${c.color}33`,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+            }}
+          >
+            <span style={{ fontSize: "1.3rem" }}>📝</span>
+            <span>Završi kurs — polaži kviz!</span>
+          </button>
+          <p style={{ color: T.muted, fontSize: "0.72rem", textAlign: "center", marginTop: 8, lineHeight: 1.5 }}>
+            4/5 tačnih → sertifikat i pokloni 🎁
+          </p>
+        </div>
+      )}
+
+      {/* Demo quiz button even without purchase */}
+      {!purchased && (
+        <div style={{ margin: "16px 16px 0", background: T.card, borderRadius: 14, padding: "14px 16px", border: `1px solid ${T.border}` }}>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <span style={{ fontSize: "1.4rem" }}>🎓</span>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.85rem", marginBottom: 2 }}>Kviz na kraju kursa!</div>
+              <div style={{ color: T.muted, fontSize: "0.72rem" }}>Položi kviz → sertifikat + 4 poklona</div>
+            </div>
+          </div>
+          <button onClick={() => triggerQuiz(c)} style={{ ...btn(), marginTop: 12, background: "none", color: T.gold, border: `1px solid ${T.gold}44`, padding: "10px", borderRadius: 10, fontSize: "0.78rem", width: "100%", fontFamily: F.body }}>
+            👀 Pogledaj primer kviza (demo)
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// -- CHECKOUT FLOW --------------------------------------------------------
+function CheckoutFlow({ course: c, onBack, onSuccess }) {
+  const [step, setStep] = useState(1);
+  const [form, setForm] = useState({ name: "", email: "", card: "", exp: "", cvc: "" });
+  const [loading, setLoading] = useState(false);
+
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+
+  function pay() {
+    if (!form.name || !emailValid) return;
+    setLoading(true);
+    setTimeout(() => { setLoading(false); onSuccess(); }, 2000);
+  }
+
+  return (
+    <div style={{ paddingBottom: 80, paddingTop: 52 }}>
+      {/* Back */}
+      <div style={{ padding: "0 16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <button onClick={onBack} style={{ ...btn(), background: "none", color: T.muted, fontSize: "0.9rem", display: "flex", alignItems: "center", gap: 6 }}>← Nazad</button>
+        <div style={{ display: "flex", gap: 6 }}>
+          {[1, 2].map(s => (
+            <div key={s} style={{ width: s === step ? 24 : 8, height: 8, borderRadius: 4, background: s === step ? T.gold : T.muted + "44", transition: "width 0.3s" }} />
+          ))}
+        </div>
+      </div>
+
+      <div style={{ padding: "0 16px" }}>
+        <div style={{ fontFamily: F.display, fontSize: "2rem", color: T.white, marginBottom: 6 }}>
+          {step === 1 ? "TVOJI PODACI" : "PLAĆANJE"}
+        </div>
+
+        {/* Order mini summary */}
+        <div style={{ background: T.card, borderRadius: 14, padding: "14px 16px", marginBottom: 24, display: "flex", justifyContent: "space-between", alignItems: "center", border: `1px solid ${T.border}` }}>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <span style={{ fontSize: "1.6rem" }}>{c.emoji}</span>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.88rem" }}>{c.title}</div>
+              <div style={{ color: T.muted, fontSize: "0.7rem" }}>Lifetime pristup</div>
+            </div>
+          </div>
+          <div>
+            <span style={{ fontFamily: F.display, fontSize: "1.5rem", color: T.gold }}>€{c.price}</span>
+          </div>
+        </div>
+
+        {step === 1 && (
+          <>
+            {[["Ime i prezime", "name", "text", "Petar Petrović"], ["Email adresa", "email", "email", "petar@email.com"]].map(([label, key, type, ph]) => (
+              <div key={key} style={{ marginBottom: 16 }}>
+                <label style={{ display: "block", fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>{label}</label>
+                <input type={type} placeholder={ph} value={(form)[key]}
+                  onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
+                  style={{ width: "100%", padding: "16px", background: T.bg2, border: `1px solid rgba(255,255,255,0.1)`, color: T.white, fontSize: "1rem", outline: "none", borderRadius: 12, fontFamily: F.body, boxSizing: "border-box" }} />
+              </div>
+            ))}
+            <button onClick={() => setStep(2)} disabled={!form.name || !emailValid} style={{ ...btn(), background: T.gold, color: "#000", padding: 16, borderRadius: 14, fontSize: "0.95rem", width: "100%", opacity: !form.name || !emailValid ? 0.5 : 1 }}>
+              Nastavi →
+            </button>
+          </>
+        )}
+
+        {step === 2 && (
+          <>
+            <div style={{ background: T.greenSoft, border: `1px solid ${T.green}33`, borderRadius: 12, padding: "12px 14px", marginBottom: 20, display: "flex", gap: 8, alignItems: "center" }}>
+              <span>🔒</span>
+              <span style={{ color: T.green, fontSize: "0.78rem" }}>Plaćanje je 100% bezbedno i šifrovano</span>
+            </div>
+
+            {[["Broj kartice", "card", "4242 4242 4242 4242"], ["Datum isteka", "exp", "MM/GG"], ["CVC", "cvc", "123"]].map(([label, key, ph]) => (
+              <div key={key} style={{ marginBottom: 14 }}>
+                <label style={{ display: "block", fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>{label}</label>
+                <input placeholder={ph} value={(form)[key]}
+                  onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
+                  style={{ width: "100%", padding: "16px", background: T.bg2, border: `1px solid rgba(255,255,255,0.1)`, color: T.white, fontSize: "1rem", outline: "none", borderRadius: 12, fontFamily: F.mono, boxSizing: "border-box" }} />
+              </div>
+            ))}
+            <button onClick={pay} disabled={loading} style={{ ...btn(), background: T.gold, color: "#000", padding: 16, borderRadius: 14, fontSize: "0.95rem", width: "100%", opacity: loading ? 0.7 : 1, marginBottom: 10 }}>
+              {loading ? "⏳ Obrađujemo..." : `💳 Plati €${c.price}`}
+            </button>
+            <button onClick={() => setStep(1)} style={{ ...btn(), background: "none", color: T.muted, padding: 12, borderRadius: 14, fontSize: "0.85rem", width: "100%" }}>← Nazad</button>
+          </>
+        )}
+
+        <div style={{ marginTop: 20, fontFamily: F.mono, fontSize: "0.62rem", color: T.muted, textAlign: "center", lineHeight: 2 }}>
+          ✓ Lifetime pristup  ·  ✓ Sva buduća ažuriranja  ·  ✓ Bez skrivenih troškova
+        </div>
+        <div style={{ marginTop: 12, background: "rgba(46,207,122,0.06)", border: `1px solid ${T.green}33`, borderRadius: 12, padding: "12px 14px", display: "flex", gap: 10, alignItems: "center" }}>
+          <span style={{ fontSize: "1.4rem" }}>🛡️</span>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: "0.82rem", color: T.green }}>30 dana garancija povraćaja</div>
+            <div style={{ fontSize: "0.74rem", color: T.muted, lineHeight: 1.4 }}>Ako nisi zadovoljan/na — vraćamo novac bez pitanja. Pišeš nam na podrska@aifluent.rs.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -- PROFILE SCREEN --------------------------------------------------------
+function ProfileScreen({ user, setUser, setTab, purchasedCourses = [] }) {
+  const [formOpen, setFormOpen] = useState(!user);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  if (formOpen || !user) return (
+    <div style={{ padding: "52px 16px", paddingBottom: 80 }}>
+      <div style={{ fontFamily: F.display, fontSize: "2rem", color: T.white, marginBottom: 6 }}>PRIJAVI SE</div>
+      <p style={{ color: T.muted, fontSize: "0.85rem", marginBottom: 28 }}>Ili registruj besplatni nalog.</p>
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ display: "block", fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>Ime</label>
+        <input value={name} onChange={e => setName(e.target.value)} placeholder="Petar Petrović" style={{ width: "100%", padding: 16, background: T.bg2, border: "1px solid rgba(255,255,255,0.1)", color: T.white, fontSize: "1rem", outline: "none", borderRadius: 12, fontFamily: F.body, boxSizing: "border-box" }} />
+      </div>
+      <div style={{ marginBottom: 24 }}>
+        <label style={{ display: "block", fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>Email</label>
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="petar@email.com" style={{ width: "100%", padding: 16, background: T.bg2, border: "1px solid rgba(255,255,255,0.1)", color: T.white, fontSize: "1rem", outline: "none", borderRadius: 12, fontFamily: F.body, boxSizing: "border-box" }} />
+      </div>
+      <button onClick={() => { if (name && email) { setUser({ name, email, enrolledCourses: [] }); setFormOpen(false); } }} style={{ ...btn(), background: T.gold, color: "#000", padding: 16, borderRadius: 14, fontSize: "0.95rem", width: "100%", opacity: !name || !email ? 0.5 : 1 }}>
+        Nastavi →
+      </button>
+      <div style={{ background: T.bg2, borderRadius: 10, padding: "12px 14px", marginTop: 16, fontFamily: F.mono, fontSize: "0.65rem", color: T.muted, textAlign: "center" }}>
+        🔒 Tvoji podaci su bezbedni i nikad se ne dele sa trećim stranama.
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{ padding: "52px 16px", paddingBottom: 80 }}>
+      {/* Profile header */}
+      <div style={{ display: "flex", gap: 16, alignItems: "center", marginBottom: 28, background: T.card, borderRadius: 16, padding: 20 }}>
+        <div style={{ width: 56, height: 56, borderRadius: "50%", background: `linear-gradient(135deg, ${T.gold}, #c87941)`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "1.4rem", color: "#000", fontFamily: F.body }}>
+          {user.name[0]}
+        </div>
+        <div>
+          <div style={{ fontWeight: 800, fontSize: "1rem" }}>{user.name}</div>
+          <div style={{ color: T.muted, fontSize: "0.8rem" }}>{user.email}</div>
+          <Pill color={T.green}>Aktivan student</Pill>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 24 }}>
+        {[["10 XP", "Dobrodošli poeni"], ["5%", "Napredak"], ["1", "Dostignuća"], [`${purchasedCourses.length}`, "Kurseva"]].map(([n, l]) => (
+          <div key={l} style={{ background: T.card, borderRadius: 14, padding: "16px", textAlign: "center" }}>
+            <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: T.gold }}>{n}</div>
+            <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: T.muted, letterSpacing: 1, textTransform: "uppercase", marginTop: 4 }}>{l}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ background: T.greenSoft, border: `1px solid ${T.green}33`, borderRadius: 12, padding: "12px 16px", marginBottom: 16, display: "flex", gap: 10, alignItems: "center" }}>
+        <span style={{ fontSize: "1.3rem" }}>🎉</span>
+        <div>
+          <div style={{ fontWeight: 700, fontSize: "0.85rem", color: T.green }}>Dobrodošao/la u AI Fluent!</div>
+          <div style={{ fontSize: "0.75rem", color: T.muted, lineHeight: 1.4 }}>Dobijaš 10 XP samo što si otvorio/la app. Nastavi da učiš!</div>
+        </div>
+      </div>
+
+      {/* Menu */}
+      {[["📚", "Moji kursevi", () => setTab("learn")], ["⚙️", "Podešavanja", () => {}], ["❓", "Pomoć", () => setTab("home")], ["👋", "Odjavi se", () => { setUser(null); setFormOpen(true); }]].map(([icon, label, action]) => (
+        <button key={label} onClick={action} style={{ ...btn(), width: "100%", background: T.card, border: "none", padding: "16px 18px", borderRadius: 14, marginBottom: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <span style={{ fontSize: "1.2rem" }}>{icon}</span>
+            <span style={{ fontWeight: 600, fontSize: "0.9rem" }}>{label}</span>
+          </div>
+          <span style={{ color: T.muted, fontSize: "0.8rem" }}>›</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// -- CONFETTI --------------------------------------------------------------
+function Confetti() {
+  const canvasRef = useRef(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    const colors = [T.gold, T.green, T.blue, T.purple, "#ff6fdf", "#ff6b6b", "#fff"];
+    const particles = Array.from({ length: 120 }, () => ({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 200,
+      r: 3 + Math.random() * 6,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 3,
+      vy: 2 + Math.random() * 4,
+      spin: Math.random() * 0.3,
+      angle: Math.random() * Math.PI * 2,
+      shape: Math.random() > 0.5 ? "rect" : "circle",
+    }));
+    let alive = true;
+    function draw() {
+      if (!alive) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.y += p.vy; p.x += p.vx; p.angle += p.spin; p.vy += 0.08;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.angle);
+        ctx.fillStyle = p.color; ctx.globalAlpha = Math.max(0, 1 - p.y / canvas.height);
+        if (p.shape === "rect") { ctx.fillRect(-p.r, -p.r * 0.4, p.r * 2, p.r * 0.8); }
+        else { ctx.beginPath(); ctx.arc(0, 0, p.r * 0.6, 0, Math.PI * 2); ctx.fill(); }
+        ctx.restore();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+    return () => { alive = false; };
+  }, []);
+  return <canvas ref={canvasRef} style={{ position: "fixed", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 999 }} />;
+}
+
+// -- GIFT SCREEN -----------------------------------------------------------
+function GiftScreen({ course, user, onDone }) {
+  const gifts = COURSE_GIFTS[course?.id] || COURSE_GIFTS[1];
+  const [revealed, setRevealed] = useState([]);
+  const [showConfetti, setShowConfetti] = useState(true);
+  const [activeCert, setActiveCert] = useState(false);
+  const [allDone, setAllDone] = useState(false);
+  const certId = useRef(Math.random().toString(36).slice(2, 8).toUpperCase());
+
+  useEffect(() => {
+    const t = setTimeout(() => setShowConfetti(false), 4000);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (revealed.length === gifts.length) {
+      const t = setTimeout(() => setAllDone(true), 600);
+      return () => clearTimeout(t);
+    }
+  }, [revealed]);
+
+  function reveal(id) {
+    if (!revealed.includes(id)) setRevealed(r => [...r, id]);
+    if (id === "cert") setActiveCert(true);
+  }
+
+  const isRevealed = (id) => revealed.includes(id);
+
+  return (
+    <div style={{ minHeight: "100vh", background: T.bg, paddingBottom: 40 }}>
+      {showConfetti && <Confetti />}
+
+      {/* Header burst */}
+      <div style={{
+        background: `linear-gradient(160deg, #1a1205 0%, ${T.bg} 60%)`,
+        padding: "52px 20px 32px", textAlign: "center",
+        borderBottom: `1px solid ${T.border}`,
+      }}>
+        <div style={{ fontSize: "4rem", marginBottom: 8, animation: "bounceIn 0.6s ease" }}>🎉</div>
+        <div style={{ fontFamily: F.display, fontSize: "2.6rem", color: T.gold, lineHeight: 1, marginBottom: 6 }}>
+          ČESTITAMO!
+        </div>
+        <div style={{ fontFamily: F.display, fontSize: "1.3rem", color: T.white, letterSpacing: 1, marginBottom: 12 }}>
+          ZAVRŠIO/LA SI {course?.title?.toUpperCase()}
+        </div>
+        <p style={{ color: T.muted, fontSize: "0.85rem", lineHeight: 1.6, maxWidth: 320, margin: "0 auto 20px" }}>
+          Kao zahvalnost za trud, pripremili smo ti <strong style={{ color: T.gold }}>{gifts.length} poklona</strong>. Klikni svaki da ga otkriješ! 🎁
+        </p>
+
+        {/* Progress pills */}
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
+          {gifts.map((g, i) => (
+            <div key={g.id} style={{
+              width: 28, height: 28, borderRadius: "50%",
+              background: isRevealed(g.id) ? g.color : "rgba(255,255,255,0.06)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "0.75rem", transition: "all 0.4s",
+              border: isRevealed(g.id) ? `2px solid ${g.color}` : "2px solid rgba(255,255,255,0.1)",
+              transform: isRevealed(g.id) ? "scale(1.15)" : "scale(1)",
+            }}>
+              {isRevealed(g.id) ? "✓" : i + 1}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Gift cards */}
+      <div style={{ padding: "20px 16px 0" }}>
+        {gifts.map((g, i) => {
+          const done = isRevealed(g.id);
+          return (
+            <div
+              key={g.id}
+              onClick={() => reveal(g.id)}
+              style={{
+                background: done ? `${g.color}0e` : T.card,
+                border: `1px solid ${done ? g.color + "55" : "rgba(255,255,255,0.06)"}`,
+                borderRadius: 20, marginBottom: 14,
+                overflow: "hidden", cursor: done ? "default" : "pointer",
+                transition: "all 0.35s", transform: done ? "scale(1)" : "scale(1)",
+                boxShadow: done ? `0 8px 32px ${g.color}18` : "none",
+              }}
+              onMouseEnter={e => { if (!done) (e.currentTarget).style.transform = "scale(1.02)"; }}
+              onMouseLeave={e => { (e.currentTarget).style.transform = "scale(1)"; }}
+            >
+              {/* Card header — always visible */}
+              <div style={{ padding: "20px 20px 16px", display: "flex", gap: 14, alignItems: "center" }}>
+                <div style={{
+                  width: 52, height: 52, borderRadius: 14,
+                  background: done ? `${g.color}22` : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${done ? g.color + "44" : "rgba(255,255,255,0.08)"}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: done ? "1.6rem" : "1.8rem",
+                  transition: "all 0.3s",
+                  filter: done ? "none" : "grayscale(1) brightness(0.4)",
+                }}>
+                  {done ? g.icon : "🎁"}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, fontSize: "0.95rem", color: done ? g.color : T.white, marginBottom: 2 }}>
+                    {done ? g.title : `Poklon #${i + 1}`}
+                  </div>
+                  <div style={{ color: T.muted, fontSize: "0.75rem" }}>
+                    {done ? g.subtitle : "Klikni da otkriješ 👆"}
+                  </div>
+                </div>
+                {!done && (
+                  <div style={{
+                    width: 32, height: 32, borderRadius: "50%",
+                    background: `${g.color}22`, border: `1px solid ${g.color}44`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: "0.8rem", color: g.color,
+                  }}>?</div>
+                )}
+                {done && (
+                  <div style={{
+                    width: 28, height: 28, borderRadius: "50%",
+                    background: g.color, display: "flex", alignItems: "center",
+                    justifyContent: "center", fontSize: "0.75rem", color: "#000", fontWeight: 800,
+                  }}>✓</div>
+                )}
+              </div>
+
+              {/* Revealed content */}
+              {done && (
+                <div style={{
+                  margin: "0 20px 20px",
+                  padding: "14px 16px",
+                  background: `${g.color}0c`,
+                  borderRadius: 12,
+                  borderLeft: `3px solid ${g.color}`,
+                  animation: "fadeSlideIn 0.4s ease",
+                }}>
+                  <p style={{ color: "#b0b8cc", fontSize: "0.82rem", lineHeight: 1.6, margin: 0 }}>
+                    {g.reveal}
+                  </p>
+                  {g.id === "cert" && (
+                    <button
+                      onClick={e => { e.stopPropagation(); setActiveCert(true); }}
+                      style={{
+                        ...btn(), marginTop: 12, background: g.color, color: "#000",
+                        padding: "10px 20px", borderRadius: 50, fontSize: "0.82rem",
+                        fontFamily: F.body,
+                      }}
+                    >
+                      📥 Preuzmi sertifikat
+                    </button>
+                  )}
+                  {g.id === "coupon" && (
+                    <div style={{
+                      marginTop: 12, padding: "10px 14px", background: "rgba(0,0,0,0.3)",
+                      borderRadius: 8, fontFamily: F.mono, fontSize: "1rem",
+                      color: g.color, letterSpacing: 3, textAlign: "center",
+                      border: `1px dashed ${g.color}55`,
+                    }}>
+                      {course?.id === 1 ? "STARTER30" : "PRO40"}
+                    </div>
+                  )}
+                  {g.id === "call" && (
+                    <button style={{ ...btn(), marginTop: 12, background: g.color, color: "#000", padding: "10px 20px", borderRadius: 50, fontSize: "0.82rem", fontFamily: F.body }}>
+                      📅 Rezerviši sesiju
+                    </button>
+                  )}
+                  {g.id === "partner" && (
+                    <button style={{ ...btn(), marginTop: 12, background: g.color, color: "#000", padding: "10px 20px", borderRadius: 50, fontSize: "0.82rem", fontFamily: F.body }}>
+                      🤝 Aktiviraj program
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Certificate modal */}
+      {activeCert && (
+        <div
+          onClick={() => setActiveCert(false)}
+          style={{
+            position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)",
+            zIndex: 500, display: "flex", alignItems: "center", justifyContent: "center",
+            padding: 20,
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              width: "100%", maxWidth: 360,
+              background: "#0f1016",
+              border: `2px solid ${T.gold}`,
+              borderRadius: 20, padding: 28,
+              textAlign: "center", position: "relative",
+              boxShadow: `0 0 60px ${T.gold}30`,
+            }}
+          >
+            {/* Decorative corner lines */}
+            {["topLeft","topRight","bottomLeft","bottomRight"].map(pos => (
+              <div key={pos} style={{
+                position: "absolute",
+                top: pos.startsWith("top") ? 10 : "auto",
+                bottom: pos.startsWith("bottom") ? 10 : "auto",
+                left: pos.endsWith("Left") ? 10 : "auto",
+                right: pos.endsWith("Right") ? 10 : "auto",
+                width: 20, height: 20,
+                borderTop: pos.startsWith("top") ? `2px solid ${T.gold}66` : "none",
+                borderBottom: pos.startsWith("bottom") ? `2px solid ${T.gold}66` : "none",
+                borderLeft: pos.endsWith("Left") ? `2px solid ${T.gold}66` : "none",
+                borderRight: pos.endsWith("Right") ? `2px solid ${T.gold}66` : "none",
+              }} />
+            ))}
+
+            <div style={{ fontSize: "2.5rem", marginBottom: 6 }}>🏆</div>
+            <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: T.gold, letterSpacing: 3, textTransform: "uppercase", marginBottom: 10 }}>
+              Sertifikat o završetku
+            </div>
+            <div style={{ width: 40, height: 1, background: `${T.gold}44`, margin: "0 auto 16px" }} />
+
+            <div style={{ fontFamily: F.display, fontSize: "2.2rem", color: T.gold, lineHeight: 1, marginBottom: 4 }}>
+              AI FLUENT
+            </div>
+            <div style={{ fontFamily: F.display, fontSize: "1rem", color: T.muted, letterSpacing: 3, marginBottom: 20 }}>
+              {course?.title?.toUpperCase()}
+            </div>
+
+            <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.muted, marginBottom: 6 }}>Ovim se potvrđuje da je</div>
+            <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: T.white, marginBottom: 6 }}>
+              {user?.name || "TVOJE IME"}
+            </div>
+            <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.muted, marginBottom: 20, lineHeight: 1.6 }}>
+              uspešno završio/la kurs i stekao/la<br />
+              kompetencije u oblasti AI pismenosti
+            </div>
+
+            <div style={{ width: 40, height: 1, background: `${T.gold}44`, margin: "0 auto 16px" }} />
+
+            <div style={{ display: "flex", justifyContent: "space-around" }}>
+              <div>
+                <div style={{ width: 60, height: 1, background: T.muted + "44", marginBottom: 6 }} />
+                <div style={{ fontFamily: F.mono, fontSize: "0.55rem", color: T.muted }}>AI Fluent</div>
+              </div>
+              <div style={{ fontFamily: F.mono, fontSize: "0.55rem", color: T.gold }}>
+                #{certId.current}
+              </div>
+              <div>
+                <div style={{ width: 60, height: 1, background: T.muted + "44", marginBottom: 6 }} />
+                <div style={{ fontFamily: F.mono, fontSize: "0.55rem", color: T.muted }}>
+                  {new Date().toLocaleDateString("sr-RS")}
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                const text = encodeURIComponent(`Upravo sam završio/la ${course?.title} kurs na AI Fluent platformi! Naučio/la sam kako da koristim AI za poslovnu komunikaciju, uštedu vremena i svakodnevne zadatke. Sertifikat verifikovan na aifluent.rs 🎓 #AIFluent #VeštačkaInteligencija #Sertifikat`);
+                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://aifluent.rs')}&summary=${text}`, '_blank');
+              }}
+              style={{ ...btn(), marginTop: 20, background: "#0077b5", color: "#fff", padding: "12px 28px", borderRadius: 50, fontSize: "0.85rem", fontFamily: F.body, width: "100%" }}
+            >
+              📤 Podeli na LinkedIn
+            </button>
+            <button onClick={() => setActiveCert(false)} style={{ ...btn(), marginTop: 8, background: "none", color: T.muted, fontSize: "0.78rem", fontFamily: F.body, width: "100%" }}>
+              Zatvori
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* All gifts revealed — share CTA */}
+      {allDone && (
+        <div style={{ margin: "20px 16px", background: `linear-gradient(135deg, ${T.gold}18, ${T.purple}10)`, border: `1px solid ${T.gold}44`, borderRadius: 20, padding: "24px 20px", textAlign: "center" }}>
+          <div style={{ fontSize: "2rem", marginBottom: 8 }}>🌟</div>
+          <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: T.gold, marginBottom: 8 }}>SVE SI OTKLJUČAO/LA!</div>
+          <p style={{ color: T.muted, fontSize: "0.82rem", lineHeight: 1.6, marginBottom: 20 }}>
+            Podeli svoja dostignuća i pomozi prijatelju da i on/ona uštedi vreme. Za svaku uspešnu preporuku — <strong style={{ color: T.gold }}>30% provizija od cene kursa.</strong>
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <button style={{ ...btn(), background: T.gold, color: "#000", padding: 14, borderRadius: 14, fontSize: "0.88rem", fontFamily: F.body }}>
+              📲 Podeli sa prijateljem
+            </button>
+            <button onClick={onDone} style={{ ...btn(), background: "none", color: T.muted, padding: 10, fontSize: "0.82rem", fontFamily: F.body }}>
+              Vrati se na početnu →
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// -- ONBOARDING QUIZ -------------------------------------------------------
+const ONBOARDING_Qs = [
+  {
+    q: "Kako se trenutno snalaziš sa AI?",
+    icon: "🤖",
+    sub: "Nema pogrešnog odgovora — samo da ti preporučimo pravi kurs.",
+    options: [
+      { label: "Nikad nisam probao/la", icon: "🌱" },
+      { label: "Probao/la par puta, ali nemam rutinu", icon: "🔍" },
+      { label: "Koristim redovno osnove", icon: "⚡" },
+      { label: "Koristim napredne funkcije", icon: "🚀" },
+    ],
+  },
+  {
+    q: "Šta bi ti AI najviše pomogao da reši?",
+    icon: "🎯",
+    sub: "Izaberi ono što ti je trenutno najveći bол.",
+    options: [
+      { label: "Gubim previše vremena na poslu", icon: "⏰" },
+      { label: "Ne znam kako da pišem bolji sadržaj", icon: "✍️" },
+      { label: "Hoću da poboljšam marketing i prodaju", icon: "📈" },
+      { label: "Hoću da zarađujem od AI znanja", icon: "💰" },
+    ],
+  },
+];
+
+function recommendCourse(answers) {
+  const aiLevel = answers[0]; // 0=nikad, 1=malo, 2=osnove, 3=napredno
+  const goal    = answers[1]; // 3=zarada
+  if (aiLevel >= 2 && goal === 3) return 3; // Ekspert
+  if (aiLevel >= 1) return 2;               // Napredni
+  return 1;                                 // Početnik
+}
+
+function OnboardingQuiz({ onDone }) {
+  const [phase, setPhase]     = useState("welcome"); // welcome | quiz | result
+  const [step, setStep]       = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [selected, setSelected] = useState(null);
+
+  const recommended = recommendCourse(answers);
+  const recCourse   = COURSES.find(c => c.id === recommended) || COURSES[0];
+  const q           = ONBOARDING_Qs[step];
+
+  function choose(i) {
+    setSelected(i);
+    setTimeout(() => {
+      const next = [...answers, i];
+      setAnswers(next);
+      setSelected(null);
+      if (step < ONBOARDING_Qs.length - 1) {
+        setStep(s => s + 1);
+      } else {
+        setPhase("result");
+      }
+    }, 300);
+  }
+
+  // ── WELCOME ────────────────────────────────────────────────────────────
+  if (phase === "welcome") return (
+    <div style={{ minHeight: "100vh", background: T.bg, display: "flex", flexDirection: "column", padding: "0 0 40px" }}>
+      {/* Big hero area */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 28px 0", textAlign: "center" }}>
+        <div style={{ fontSize: "4rem", marginBottom: 16, animation: "bounceIn 0.6s" }}>🤖</div>
+        <div style={{ fontFamily: F.display, fontSize: "2.6rem", color: T.white, lineHeight: 1.05, marginBottom: 12 }}>
+          Dobrodošao/la u<br /><span style={{ color: T.gold }}>AI FLUENT</span>
+        </div>
+        <p style={{ color: T.muted, fontSize: "0.95rem", lineHeight: 1.7, maxWidth: 320, marginBottom: 32 }}>
+          AI na srpskom. Bez tehničkog znanja. Bez engleskog.<br />
+          <strong style={{ color: T.white }}>Samo rezultati — od prvog dana.</strong>
+        </p>
+
+        {/* 3 vrednosti */}
+        <div style={{ width: "100%", maxWidth: 340, display: "flex", flexDirection: "column", gap: 10, marginBottom: 36 }}>
+          {[
+            ["⚡", "Nauči za vikend", "Lekcije po 10–20 min, gde god hoćeš"],
+            ["📱", "Samo telefon", "Bez laptopa, bez instalacija"],
+            ["🇷🇸", "Sve na srpskom", "Objašnjeno jednostavno, bez žargona"],
+          ].map(([ic, title, sub]) => (
+            <div key={title} style={{ background: T.card, borderRadius: 14, padding: "14px 16px", display: "flex", gap: 14, alignItems: "center", textAlign: "left", border: "1px solid rgba(255,255,255,0.04)" }}>
+              <span style={{ fontSize: "1.5rem", flexShrink: 0 }}>{ic}</span>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: "0.88rem", color: T.white, marginBottom: 2 }}>{title}</div>
+                <div style={{ fontSize: "0.76rem", color: T.muted, lineHeight: 1.4 }}>{sub}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div style={{ padding: "0 24px" }}>
+        <button
+          onClick={() => setPhase("quiz")}
+          style={{ ...btn(), background: T.gold, color: "#000", padding: "17px", borderRadius: 16, fontSize: "1rem", width: "100%", fontFamily: F.body }}
+        >
+          Pronađi pravi kurs za mene →
+        </button>
+        <p style={{ textAlign: "center", color: T.muted, fontSize: "0.72rem", marginTop: 12, lineHeight: 1.5 }}>
+          2 kratka pitanja · Bez registracije · Bez obaveza
+        </p>
+      </div>
+    </div>
+  );
+
+  // ── RESULT ────────────────────────────────────────────────────────────
+  if (phase === "result") return (
+    <div style={{ minHeight: "100vh", background: T.bg, display: "flex", flexDirection: "column", padding: "60px 24px 40px" }}>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: "3rem", marginBottom: 10, animation: "bounceIn 0.5s" }}>🎯</div>
+        <div style={{ fontFamily: F.mono, fontSize: "0.62rem", color: T.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>
+          Preporučujemo ti
+        </div>
+        <div style={{ fontFamily: F.display, fontSize: "2.4rem", color: recCourse.color, lineHeight: 1, marginBottom: 8 }}>
+          {recCourse.emoji} {recCourse.title}
+        </div>
+        <p style={{ color: T.muted, fontSize: "0.88rem", lineHeight: 1.6, maxWidth: 320, margin: "0 auto" }}>
+          {recCourse.tagline}
+        </p>
+      </div>
+
+      <div style={{ background: T.card, borderRadius: 18, padding: "20px", marginBottom: 20, border: `1px solid ${recCourse.color}33` }}>
+        <div style={{ fontFamily: F.mono, fontSize: "0.58rem", color: T.muted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 12 }}>
+          Šta ćeš naučiti
+        </div>
+        {recCourse.whatYouGet.map((w, i) => (
+          <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10 }}>
+            <span style={{ color: T.green, fontSize: "0.85rem", flexShrink: 0, marginTop: 1 }}>✓</span>
+            <span style={{ color: "#9ca3af", fontSize: "0.84rem", lineHeight: 1.5 }}>{w}</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ background: `${recCourse.color}12`, border: `1px solid ${recCourse.color}33`, borderRadius: 14, padding: "14px 16px", marginBottom: 24, display: "flex", gap: 10, alignItems: "center" }}>
+        <span style={{ fontSize: "1.4rem" }}>🛡️</span>
+        <div style={{ fontSize: "0.8rem", color: T.muted, lineHeight: 1.5 }}>
+          <strong style={{ color: T.white }}>30 dana garancija povraćaja.</strong> Ako nisi zadovoljan/na, vraćamo novac bez pitanja.
+        </div>
+      </div>
+
+      <button
+        onClick={() => onDone(recommended)}
+        style={{ ...btn(), background: recCourse.color, color: recCourse.color === T.gold ? "#000" : "#fff", padding: "17px", borderRadius: 16, fontSize: "1rem", width: "100%", marginBottom: 12 }}
+      >
+        Pogledaj {recCourse.title} →
+      </button>
+      <button
+        onClick={() => onDone(0)}
+        style={{ ...btn(), background: "none", color: T.muted, fontSize: "0.82rem", padding: "10px", width: "100%" }}
+      >
+        Pogledaj sve kurseve
+      </button>
+    </div>
+  );
+
+  // ── PITANJA ────────────────────────────────────────────────────────────
+  const progress = ((step) / ONBOARDING_Qs.length) * 100;
+  return (
+    <div style={{ minHeight: "100vh", background: T.bg, display: "flex", flexDirection: "column", padding: "52px 24px 40px" }}>
+      {/* Progress */}
+      <div style={{ marginBottom: 36 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontFamily: F.mono, fontSize: "0.58rem", color: T.muted, marginBottom: 10 }}>
+          <span>Pitanje {step + 1} od {ONBOARDING_Qs.length}</span>
+          <button onClick={() => setPhase("welcome")} style={{ ...btn(), background: "none", color: T.muted, fontSize: "0.7rem", fontFamily: F.mono }}>← Nazad</button>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 4, height: 4 }}>
+          <div style={{ height: "100%", borderRadius: 4, background: T.gold, width: `${progress}%`, transition: "width 0.4s ease" }} />
+        </div>
+      </div>
+
+      {/* Question */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <div style={{ fontSize: "2.8rem", marginBottom: 14 }}>{q.icon}</div>
+          <div style={{ fontFamily: F.display, fontSize: "1.8rem", color: T.white, lineHeight: 1.2, marginBottom: 8 }}>{q.q}</div>
+          <div style={{ color: T.muted, fontSize: "0.82rem", lineHeight: 1.5 }}>{q.sub}</div>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {q.options.map((opt, i) => (
+            <button
+              key={i}
+              onClick={() => choose(i)}
+              style={{
+                ...btn(),
+                background: selected === i ? `${T.gold}20` : T.card,
+                border: `1px solid ${selected === i ? T.gold + "88" : "rgba(255,255,255,0.08)"}`,
+                borderRadius: 14, padding: "16px 18px",
+                textAlign: "left", color: selected === i ? T.gold : T.white,
+                fontSize: "0.9rem", display: "flex", alignItems: "center", gap: 14,
+                transition: "all 0.2s",
+                transform: selected === i ? "scale(0.98)" : "scale(1)",
+              }}
+            >
+              <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>{opt.icon}</span>
+              <span style={{ fontWeight: selected === i ? 700 : 500 }}>{opt.label}</span>
+              {selected === i && <span style={{ marginLeft: "auto", color: T.gold }}>✓</span>}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -- ROOT APP --------------------------------------------------------------
+function App() {
+  const [tab, setTab] = useState("home");
+  const [course, setCourse] = useState(COURSES[0]);
+  const [user, setUser] = useState(null);
+  const [showGift, setShowGift] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [giftCourse, setGiftCourse] = useState(null);
+  const [onboardingDone, setOnboardingDone] = useState(false);
+  const [purchasedCourses, setPurchasedCourses] = useState([]); // prati kupovine
+
+  // -- Engagement state ----------------------------
+  const [streak, setStreak] = useState(1);
+  const [savedTips, setSavedTips] = useState(0);
+  const [hasNotif, setHasNotif] = useState(true);
+
+  function handleSaveTip() {
+    setSavedTips(s => s + 1);
+    setStreak(s => Math.min(s + 1, 30));
+  }
+
+  function handlePurchase(c) {
+    setPurchasedCourses(prev => prev.find(x => x.id === c.id) ? prev : [...prev, c]);
+  }
+
+  function triggerQuiz(c) {
+    setGiftCourse(c);
+    setShowQuiz(true);
+    setShowGift(false);
+  }
+
+  function triggerGift(c) {
+    setGiftCourse(c);
+    setShowGift(true);
+    setShowQuiz(false);
+  }
+
+  function handleOnboardingDone(courseId) {
+    setOnboardingDone(true);
+    if (courseId > 0) {
+      const c = COURSES.find(x => x.id === courseId) || COURSES[0];
+      setCourse(c);
+      setTab("courses"); // Idi na courses da vidi trust signale pre kupovine
+    } else {
+      setTab("courses");
+    }
+  }
+
+  function handleQuizPass() {
+    setShowQuiz(false);
+    setShowGift(true);
+  }
+
+  function handleQuizFail() {
+    setShowQuiz(false);
+    setShowGift(false);
+    setTab("learn");
+  }
+
+  function handleTabChange(t) {
+    setTab(t);
+    if (t === "zajednica") setHasNotif(false);
+  }
+
+  const CSS = `
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0b0f; }
+    button { -webkit-tap-highlight-color: transparent; }
+    ::-webkit-scrollbar { display: none; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+    @keyframes bounceIn { 0%{transform:scale(0.3);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+    @keyframes fadeSlideIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideDown { from{opacity:0;transform:translateX(-50%) translateY(-16px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+    input::placeholder { color: #3a4055; }
+  `;
+
+  if (!onboardingDone) return (
+    <div style={{ background: T.bg, color: T.white, minHeight: "100vh", fontFamily: F.body, maxWidth: 480, margin: "0 auto" }}>
+      <style>{CSS}</style>
+      <OnboardingQuiz onDone={handleOnboardingDone} />
+    </div>
+  );
+
+  if (showQuiz) return (
+    <div style={{ background: T.bg, color: T.white, minHeight: "100vh", fontFamily: F.body, maxWidth: 480, margin: "0 auto" }}>
+      <style>{CSS}</style>
+      <QuizScreen course={giftCourse || course} onPass={handleQuizPass} onFail={handleQuizFail} />
+    </div>
+  );
+
+  if (showGift) return (
+    <div style={{ background: T.bg, color: T.white, minHeight: "100vh", fontFamily: F.body, maxWidth: 480, margin: "0 auto" }}>
+      <style>{CSS}</style>
+      <GiftScreen course={giftCourse || course} user={user} onDone={() => { setShowGift(false); setTab("home"); }} />
+    </div>
+  );
+
+  return (
+    <div style={{ background: T.bg, color: T.white, minHeight: "100vh", fontFamily: F.body, overflowX: "hidden", maxWidth: 480, margin: "0 auto", position: "relative" }}>
+      <style>{CSS}</style>
+
+      {tab === "home"      && <HomeScreen setTab={handleTabChange} setCourse={setCourse} user={user} triggerQuiz={triggerQuiz} streak={streak} savedTips={savedTips} onSaveTip={handleSaveTip} />}
+      {tab === "courses"   && <CoursesScreen setCourse={setCourse} setTab={handleTabChange} />}
+      {tab === "learn"     && <LearnScreen course={course} setCourse={setCourse} setTab={handleTabChange} user={user} triggerQuiz={triggerQuiz} purchasedCourses={purchasedCourses} onPurchase={handlePurchase} />}
+      {tab === "zajednica" && <ZajednicaScreen setTab={handleTabChange} streak={streak} savedTips={savedTips} />}
+      {tab === "profile"   && <ProfileScreen user={user} setUser={setUser} setTab={handleTabChange} purchasedCourses={purchasedCourses} />}
+
+      <BottomNav tab={tab} setTab={handleTabChange} hasNotif={hasNotif} />
+    </div>
+  );
+}
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
