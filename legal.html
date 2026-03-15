@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Fluent — Pravni dokumenti</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0b0f;--bg2:#12141a;--card:#13151e;--gold:#f5a623;--white:#f2ede4;--muted:#5a6278;--green:#2ecf7a;--red:#ff6b6b;--blue:#4da8ff;--purple:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--white);font-family:"Syne",sans-serif;line-height:1.6;font-size:15px;padding-bottom:60px}
+.nav{background:rgba(10,11,15,0.97);padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.logo{font-family:"Bebas Neue",sans-serif;font-size:1.4rem;letter-spacing:3px;color:var(--gold)}
+.logo span{color:var(--white)}
+.back{font-family:"DM Mono",monospace;font-size:0.6rem;color:var(--muted);text-decoration:none;letter-spacing:1px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:14px 16px;scrollbar-width:none;border-bottom:1px solid rgba(255,255,255,0.04);position:sticky;top:53px;background:var(--bg);z-index:99}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:7px 14px;border-radius:50px;border:1px solid rgba(255,255,255,0.08);font-family:"DM Mono",monospace;font-size:0.6rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:all .2s;background:none;color:var(--muted)}
+.tab.on{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
+.sec{padding:28px 18px;display:none;max-width:680px;margin:0 auto}
+.sec.on{display:block}
+.tag{font-family:"DM Mono",monospace;font-size:0.58rem;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;display:block}
+h2{font-family:"Bebas Neue",sans-serif;font-size:1.9rem;letter-spacing:1.5px;line-height:1;margin-bottom:6px}
+h2 span{color:var(--gold)}
+.date{font-family:"DM Mono",monospace;font-size:0.62rem;color:var(--muted);margin-bottom:24px;display:block}
+.block{background:var(--bg2);border-radius:14px;padding:20px 18px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.05)}
+.num{font-family:"DM Mono",monospace;font-size:0.58rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.title{font-family:"Bebas Neue",sans-serif;font-size:1.1rem;color:var(--white);margin-bottom:10px}
+p{color:#7a8296;font-size:0.87rem;line-height:1.8;margin-bottom:10px}
+p:last-child{margin-bottom:0}
+ul{padding-left:16px;margin:8px 0}
+li{color:#7a8296;font-size:0.87rem;line-height:1.8;margin-bottom:6px}
+strong{color:var(--white)}
+a{color:var(--gold)}
+table{width:100%;font-size:0.78rem;border-collapse:collapse}
+th{color:var(--gold);font-family:"DM Mono",monospace;font-size:0.6rem;text-align:left;padding:6px 4px;border-bottom:1px solid rgba(255,255,255,0.06)}
+td{padding:8px 4px;border-bottom:1px solid rgba(255,255,255,0.03);color:#7a8296}
+.green-box{background:rgba(46,207,122,0.06);border:1px solid rgba(46,207,122,0.25);border-radius:14px;padding:20px;margin-bottom:20px;display:flex;gap:14px;align-items:flex-start}
+.green-box .icon{font-size:2rem;flex-shrink:0}
+.green-box strong{color:var(--green);display:block;font-size:1rem;margin-bottom:4px}
+.contact-box{background:rgba(245,166,35,0.05);border:1px solid rgba(245,166,35,0.2);border-radius:14px;padding:16px 18px;margin-top:8px}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="logo">AI<span>FLUENT</span></div>
+  <a href="/" class="back">← Nazad</a>
+</div>
+
+<div class="tabs">
+  <button class="tab on" onclick="show('uslovi')">Uslovi korišćenja</button>
+  <button class="tab" onclick="show('privatnost')">Politika privatnosti</button>
+  <button class="tab" onclick="show('povracaj')">Povraćaj novca</button>
+</div>
+
+<!-- USLOVI KORIŠĆENJA -->
+<div id="uslovi" class="sec on">
+  <span class="tag">// Pravni dokument</span>
+  <h2>USLOVI <span>KORIŠĆENJA</span></h2>
+  <span class="date">Poslednje ažuriranje: 15.03.2026. · Verzija 1.0</span>
+
+  <div class="block">
+    <div class="num">Član 1</div>
+    <div class="title">Prihvatanje uslova</div>
+    <p>Korišćenjem platforme AI Fluent (aifluent.rs) i kupovinom kurseva prihvatate ove Uslove korišćenja u celosti. Ukoliko se ne slažete sa uslovima, molimo vas da ne koristite platformu.</p>
+    <p>Platforma AI Fluent je u vlasništvu i pod upravljanjem fizičkog lica <strong>Anes Hadžiibrahimović</strong>, 7. Jula 21, Novi Pazar 36300, Srbija.</p>
+    <p>Kontakt: <strong>anes900@gmail.com</strong></p>
+  </div>
+
+  <div class="block">
+    <div class="num">Član 2</div>
+    <div class="title">Opis usluge</div>
+    <p>AI Fluent je online obrazovna platforma koja nudi kurseve iz oblasti veštačke inteligencije (AI) na srpskom jeziku. Platforma pruža:</p>
+    <ul>
+      <li>Video lekcije dostupne online putem web aplikacije</li>
+      <li>Kvizove za proveru znanja</li>
+      <li>Sertifikate o završetku kursa</li>
+      <li>Pristup zajednici studenata</li>
+      <li>Prateće materijale (PDF, šablone i slično)</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="num">Član 3</div>
+    <div class="title">Kupovina i plaćanje</div>
+    <p>Sve cene na platformi su izražene u evrima (EUR). Kupovinom kursa korisnik stiče <strong>doživotni pristup</strong> sadržaju tog kursa, uključujući sva buduća besplatna ažuriranja, za ličnu, nekomercijalnu upotrebu.</p>
+    <p>AI Fluent ne čuva podatke o platnim karticama — sve transakcije obrađuje Paddle koji poseduje PCI DSS sertifikaciju.</p>
+  </div>
+
+  <div class="block">
+    <div class="num">Član 4</div>
+    <div class="title">Politika povraćaja sredstava</div>
+    <p>Nudimo <strong>30 dana garanciju povraćaja novca</strong> — bez pitanja. Ako u prvih 30 dana nisi zadovoljan/na iz bilo kog razloga, pišeš nam na <strong>anes900@gmail.com</strong> sa brojem porudžbine i vraćamo novac u roku od 5-7 radnih dana.</p>
+  </div>
+
+  <div class="block">
+    <div class="num">Član 5</div>
+    <div class="title">Intelektualna svojina</div>
+    <p>Sav sadržaj platforme (videi, tekstovi, materijali, sertifikati) je vlasništvo AI Fluent i zaštićen autorskim pravima. Zabranjeno je kopiranje, snimanje, redistribuiranje ili preprodaja sadržaja trećim licima bez pisanog odobrenja.</p>
+  </div>
+
+  <div class="block">
+    <div class="num">Član 6</div>
+    <div class="title">Ograničenje odgovornosti</div>
+    <p>Kursevi AI Fluent su edukativni po prirodi. AI Fluent ne garantuje određene finansijske rezultate, zaposlenje ili specifičan nivo zarade. Rezultati zavise od individualnog truda, iskustva i tržišnih uslova.</p>
+  </div>
+
+  <div class="block">
+    <div class="num">Član 7</div>
+    <div class="title">Merodavno pravo</div>
+    <p>Na ove Uslove primenjuje se pravo Republike Srbije. Svi sporovi rešavaju se pred nadležnim sudom u Novom Pazaru, Srbija.</p>
+  </div>
+</div>
+
+<!-- POLITIKA PRIVATNOSTI -->
+<div id="privatnost" class="sec">
+  <span class="tag">// Pravni dokument</span>
+  <h2>POLITIKA <span>PRIVATNOSTI</span></h2>
+  <span class="date">Poslednje ažuriranje: 15.03.2026. · Usklađeno sa GDPR i ZZPL</span>
+
+  <div class="block">
+    <div class="num">1. Rukovalac podataka</div>
+    <div class="title">Ko je odgovoran za vaše podatke</div>
+    <p>Rukovalac ličnih podataka je: <strong>Anes Hadžiibrahimović</strong>, 7. Jula 21, Novi Pazar 36300, Srbija.</p>
+    <p>Kontakt za pitanja o privatnosti: <strong>anes900@gmail.com</strong></p>
+  </div>
+
+  <div class="block">
+    <div class="num">2. Podaci koje prikupljamo</div>
+    <div class="title">Koje informacije čuvamo</div>
+    <p><strong>Direktno unosite:</strong></p>
+    <ul>
+      <li>Ime i prezime</li>
+      <li>Email adresa</li>
+    </ul>
+    <p><strong>Automatski prikupljamo:</strong></p>
+    <ul>
+      <li>IP adresa (anonimizovana)</li>
+      <li>Tip uređaja i browser</li>
+      <li>Napredak u kursu</li>
+    </ul>
+    <p><strong>NE prikupljamo:</strong></p>
+    <ul>
+      <li>Brojeve platnih kartica (obrađuje Paddle)</li>
+      <li>Lozinke u čitljivom obliku</li>
+      <li>Biometrijske podatke</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="num">3. Svrha obrade</div>
+    <div class="title">Zašto koristimo vaše podatke</div>
+    <ul>
+      <li><strong>Isporuka usluge</strong> — pristup kursu, sertifikati, materijali</li>
+      <li><strong>Email komunikacija</strong> — sekvenca dobrodošlice (uz vaš pristanak)</li>
+      <li><strong>Podrška</strong> — rešavanje tehničkih problema</li>
+      <li><strong>Analitika</strong> — poboljšanje sadržaja na osnovu anonimnih podataka</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="num">4. Deljenje podataka</div>
+    <div class="title">Ko još ima pristup vašim podacima</div>
+    <p>Delimo samo sa servisima neophodnim za rad platforme:</p>
+    <ul>
+      <li><strong>Paddle</strong> — obrada plaćanja (paddle.com)</li>
+      <li><strong>Mailchimp</strong> — email marketing (mailchimp.com)</li>
+      <li><strong>Vercel</strong> — hosting aplikacije</li>
+      <li><strong>Google Analytics</strong> — anonimna analitika poseta</li>
+    </ul>
+    <p>Ne prodajemo niti delimo vaše podatke u komercijalne svrhe.</p>
+  </div>
+
+  <div class="block">
+    <div class="num">5. Vaša prava</div>
+    <div class="title">Šta možete tražiti od nas</div>
+    <p>Imate pravo da pristupite, ispravite, izbrišete ili prenesete vaše podatke. Email marketing možete otkazati u svakom trenutku klikom na "Unsubscribe" u svakom emailu.</p>
+    <p>Zahteve šaljite na: <strong>anes900@gmail.com</strong> — odgovaramo u roku od 30 dana.</p>
+  </div>
+
+  <div class="block">
+    <div class="num">6. Čuvanje podataka</div>
+    <div class="title">Koliko dugo čuvamo podatke</div>
+    <ul>
+      <li><strong>Podaci o kupovini</strong> — 5 godina (zakonska obaveza)</li>
+      <li><strong>Email lista</strong> — dok ne otkažete pretplatu</li>
+      <li><strong>Analitički podaci</strong> — 26 meseci</li>
+    </ul>
+  </div>
+</div>
+
+<!-- POVRAĆAJ NOVCA -->
+<div id="povracaj" class="sec">
+  <span class="tag">// Pravni dokument</span>
+  <h2>POVRAĆAJ <span>NOVCA</span></h2>
+  <span class="date">Poslednje ažuriranje: 15.03.2026.</span>
+
+  <div class="green-box">
+    <div class="icon">🛡️</div>
+    <div>
+      <strong>30 dana garancija povraćaja novca</strong>
+      <p style="margin:0;color:#7a8296;font-size:0.87rem;line-height:1.6">Ako u prvih 30 dana nisi zadovoljan/na iz bilo kog razloga — vraćamo novac bez pitanja. Nema komplikacija, nema uslovljavanja.</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="num">Kako zatražiti povraćaj</div>
+    <div class="title">Proces je jednostavan</div>
+    <ul>
+      <li>Pošalji email na <strong>anes900@gmail.com</strong></li>
+      <li>Napiši broj porudžbine iz email potvrde</li>
+      <li>Novac se vraća u roku od 5–7 radnih dana</li>
+    </ul>
+    <p>Rok za zahtev: <strong>30 dana</strong> od datuma kupovine.</p>
+  </div>
+
+  <div class="block">
+    <div class="num">Napomena</div>
+    <div class="title">Naša garancija je bezuslovna</div>
+    <p>Garancija važi bez obzira na to koliko lekcija si pogledao/la. Verujemo u kvalitet naših kurseva i stojimo iza svake kupovine.</p>
+  </div>
+
+  <div class="contact-box">
+    <p style="margin:0;font-size:0.85rem">Pitanja? Piši na <strong>anes900@gmail.com</strong> — odgovaramo u roku od 24h.</p>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  event.target.classList.add('on');
+}
+</script>
+</body>
+</html>
