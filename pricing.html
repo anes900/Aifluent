@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Fluent — Cene kurseva</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0b0f;--bg2:#12141a;--card:#13151e;--gold:#f5a623;--white:#f2ede4;--muted:#5a6278;--green:#2ecf7a;--red:#ff6b6b;--purple:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--white);font-family:"Syne",sans-serif;line-height:1.6;font-size:15px;padding:0 0 60px}
+.nav{background:rgba(10,11,15,0.96);padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+.logo{font-family:"Bebas Neue",sans-serif;font-size:1.4rem;letter-spacing:3px;color:var(--gold)}
+.logo span{color:var(--white)}
+.back{font-family:"DM Mono",monospace;font-size:0.6rem;color:var(--muted);text-decoration:none;letter-spacing:1px}
+.wrap{padding:28px 18px;max-width:680px;margin:0 auto}
+.tag{font-family:"DM Mono",monospace;font-size:0.58rem;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;display:block}
+h1{font-family:"Bebas Neue",sans-serif;font-size:1.9rem;letter-spacing:1.5px;line-height:1;margin-bottom:6px}
+h1 span{color:var(--gold)}
+.sub{color:var(--muted);font-size:0.88rem;margin-bottom:28px;line-height:1.5}
+.card{background:var(--card);border-radius:18px;padding:22px 20px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.06)}
+.card.featured{border-color:rgba(245,166,35,0.4)}
+.badge{display:inline-block;font-family:"DM Mono",monospace;font-size:0.55rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-bottom:10px}
+.course-title{font-family:"Bebas Neue",sans-serif;font-size:1.6rem;line-height:1;margin-bottom:4px}
+.course-desc{color:var(--muted);font-size:0.82rem;line-height:1.5;margin-bottom:16px}
+.price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.price{font-family:"Bebas Neue",sans-serif;font-size:2.2rem;color:var(--gold);line-height:1}
+.old-price{color:var(--muted);text-decoration:line-through;font-size:0.85rem}
+.price-note{font-family:"DM Mono",monospace;font-size:0.6rem;color:var(--muted);margin-bottom:16px}
+ul{padding-left:0;list-style:none;margin-bottom:18px}
+li{color:#9ca3af;font-size:0.84rem;line-height:1.5;margin-bottom:8px;display:flex;gap:8px}
+li::before{content:"✓";color:var(--green);flex-shrink:0}
+.btn{display:block;text-align:center;padding:14px;border-radius:12px;font-family:"Syne",sans-serif;font-weight:800;font-size:0.9rem;text-decoration:none;transition:opacity 0.2s}
+.btn:hover{opacity:0.85}
+.guarantee{background:rgba(46,207,122,0.06);border:1px solid rgba(46,207,122,0.25);border-radius:14px;padding:16px 18px;display:flex;gap:12px;align-items:center;margin-top:8px}
+.guarantee strong{color:var(--green);display:block;font-size:0.88rem}
+.guarantee p{color:var(--muted);font-size:0.8rem;margin:0;line-height:1.4}
+.bundle{border:2px dashed rgba(167,139,250,0.3);border-radius:18px;padding:24px 20px;margin-bottom:16px;background:rgba(167,139,250,0.03)}
+</style>
+</head>
+<body>
+<div class="nav"><div class="logo">AI<span>FLUENT</span></div><a href="/" class="back">← Nazad</a></div>
+<div class="wrap">
+  <span class="tag">// Izaberi paket</span>
+  <h1>KOJI TI <span>ODGOVARA?</span></h1>
+  <p class="sub">Lifetime pristup · Sva buduća ažuriranja besplatno · 30 dana garancija povraćaja</p>
+
+  <!-- AI POČETNIK -->
+  <div class="card">
+    <span class="badge" style="background:rgba(46,207,122,0.12);color:var(--green)">🌱 Početnik</span>
+    <div class="course-title" style="color:var(--green)">AI POČETNIK</div>
+    <p class="course-desc">Nikad nisi koristio — idealno za tebe. Nauči da koristiš AI kao što koristiš Google.</p>
+    <div class="price-row">
+      <div class="price">€49</div>
+      <div class="old-price">€89</div>
+    </div>
+    <div class="price-note">jednokratna uplata · lifetime pristup · 8 modula · 24 lekcije</div>
+    <ul>
+      <li>Mejlovi i poslovni dokumenti za 60 sekundi</li>
+      <li>CV i propratno pismo za 2 minuta</li>
+      <li>Planiranje putovanja, recepti, svakodnevni zadaci</li>
+      <li>ChatGPT, Claude, Gemini — koji za šta</li>
+      <li>Sertifikat AI Fluent Početnika</li>
+    </ul>
+    <a href="/" class="btn" style="background:var(--green);color:#000">Kupi AI Početnik — €49</a>
+  </div>
+
+  <!-- AI NAPREDNI -->
+  <div class="card featured">
+    <span class="badge" style="background:rgba(245,166,35,0.12);color:var(--gold)">⚡ Najpopularniji</span>
+    <div class="course-title" style="color:var(--gold)">AI NAPREDNI</div>
+    <p class="course-desc">Automatizuj posao, koristi AI za biznis i napravi AI da radi za tebe.</p>
+    <div class="price-row">
+      <div class="price">€149</div>
+      <div class="old-price">€249</div>
+    </div>
+    <div class="price-note">jednokratna uplata · lifetime pristup · 8 modula · 32 lekcije</div>
+    <ul>
+      <li>AI za slike, video i zvuk</li>
+      <li>AI za Instagram, TikTok i marketing</li>
+      <li>Make.com automatizacije — radi bez tebe</li>
+      <li>Batch produkcija sadržaja za mesec dana za 4h</li>
+      <li>Sertifikat AI Fluent Napredni</li>
+    </ul>
+    <a href="/" class="btn" style="background:var(--gold);color:#000">Kupi AI Napredni — €149</a>
+  </div>
+
+  <!-- AI EKSPERT -->
+  <div class="card">
+    <span class="badge" style="background:rgba(255,107,107,0.12);color:var(--red)">🚀 Ekspert</span>
+    <div class="course-title" style="color:var(--red)">AI EKSPERT</div>
+    <p class="course-desc">Počni da zarađuješ od AI znanja. Pokreni uslugu, nudi konsultacije, pravi AI produkte.</p>
+    <div class="price-row">
+      <div class="price">€349</div>
+      <div class="old-price">€549</div>
+    </div>
+    <div class="price-note">jednokratna uplata · lifetime pristup · 7 modula · 28 lekcije</div>
+    <ul>
+      <li>Pronalaženje i naplata klijenata</li>
+      <li>Skaliranje od freelancera do agencije</li>
+      <li>Pasivni prihod — digitalni proizvodi i affiliate</li>
+      <li>Sertifikat AI Fluent Eksperta + VIP zajednica</li>
+      <li>Doživotni pristup svim budućim kursevima</li>
+    </ul>
+    <a href="/" class="btn" style="background:var(--red);color:#fff">Kupi AI Ekspert — €349</a>
+  </div>
+
+  <!-- BUNDLE -->
+  <div class="bundle">
+    <span class="badge" style="background:rgba(167,139,250,0.12);color:var(--purple)">🎁 Bundle</span>
+    <div class="course-title">SVI KURSEVI</div>
+    <p class="course-desc" style="margin-bottom:14px">Početnik + Napredni + Ekspert. Uštedi <strong style="color:var(--gold)">€98</strong>.</p>
+    <div class="price-row">
+      <div class="price" style="color:var(--purple)">€449</div>
+      <div class="old-price">€547</div>
+    </div>
+    <div class="price-note" style="margin-bottom:16px">lifetime pristup · sva 3 kursa · sva ažuriranja</div>
+    <a href="/" class="btn" style="background:var(--purple);color:#fff">Uzmi sve kurseve — €449</a>
+  </div>
+
+  <!-- GARANCIJA -->
+  <div class="guarantee">
+    <div style="font-size:1.8rem;flex-shrink:0">🛡️</div>
+    <div>
+      <strong>30 dana garancija povraćaja novca</strong>
+      <p>Nije za tebe? Vraćamo novac bez pitanja. Piši na anes900@gmail.com.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
